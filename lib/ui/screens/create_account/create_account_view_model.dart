@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/core.dart';
-import 'package:password_manage_app/core/utils/utils.dart';
+import 'package:password_manage_app/core/utils/logger.dart';
 import 'package:password_manage_app/ui/base/base.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
 class CreateAccountViewModel extends BaseViewModel {
+  CategoryUseCase sqlCategoryUsecase;
+  AccountUseCase sqlAccountUsecase;
+
+  CreateAccountViewModel(
+      {required this.sqlCategoryUsecase, required this.sqlAccountUsecase});
   final TextEditingController txtTitle = TextEditingController();
   final TextEditingController txtUsername = TextEditingController();
   final TextEditingController txtPassword = TextEditingController();
   final TextEditingController txtFieldTitle = TextEditingController();
-  final TextEditingController txtKeySetOTP = TextEditingController();
   final TextEditingController txtNote = TextEditingController();
 
   ValueNotifier<List<DynamicTextField>> dynamicTextFieldNotifier =
@@ -22,11 +26,16 @@ class CreateAccountViewModel extends BaseViewModel {
     TypeTextField(title: 'Password', type: 'password'),
   ];
 
-  ValueNotifier<String> keyAuthentication = ValueNotifier<String>("");
   ValueNotifier<TypeTextField> typeTextFieldSelected =
       ValueNotifier<TypeTextField>(
     TypeTextField(title: 'Text', type: 'text'),
   );
+
+  final ValueNotifier<List<CategoryModel>> listCategory =
+      ValueNotifier<List<CategoryModel>>([]);
+
+  ValueNotifier<CategoryModel> categorySelected =
+      ValueNotifier<CategoryModel>(CategoryModel(name: "Select category"));
 
   void initData() {
     typeTextFieldSelected.value = typeTextFields[0];
@@ -36,6 +45,8 @@ class CreateAccountViewModel extends BaseViewModel {
     txtPassword.clear();
     txtFieldTitle.clear();
 
+    getCategories();
+    getAccounts();
     notifyListeners();
   }
 
@@ -44,25 +55,79 @@ class CreateAccountViewModel extends BaseViewModel {
     setState(ViewState.busy);
   }
 
-  void handleClearKeyAuth() {
-    keyAuthentication.value = "";
-    isEnterOTPFromKeyboard = ValueNotifier<bool>(false);
-    notifyListeners();
+  void getCategories() async {
+    Result<List<CategoryModel>, Exception> listCategory =
+        await sqlCategoryUsecase.getCategories();
+    if (listCategory.isSuccess) {
+      this.listCategory.value = listCategory.data ?? [];
+    } else {}
+  }
+
+  Future<void> getAccounts() async {
+    Result<List<AccountModel>, Exception> listAccounts =
+        await sqlAccountUsecase.getAccounts();
+
+    for (AccountModel account in listAccounts.data ?? []) {
+      customLogger(msg: "${account.toJson()}", typeLogger: TypeLogger.info);
+    }
+  }
+
+  Future<void> handleInsertAccount({
+    required BuildContext context,
+  }) async {
+    printValues();
+    AccountModel account = AccountModel(
+      title: txtTitle.text,
+      email: txtUsername.text,
+      password: txtPassword.text,
+      note: txtNote.text,
+      category: categorySelected.value,
+      customFields: dynamicTextFieldNotifier.value
+          .map((e) => {
+                e.customField.key: e.controller.text,
+                "typeField": e.customField.typeField.type,
+              })
+          .toList(),
+    );
+
+    Result<bool, Exception> result =
+        await sqlAccountUsecase.saveAccount(account);
+    if (result.isSuccess) {
+      resetFields();
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop({
+        "isSuccess": true,
+      });
+      customLogger(msg: "Create account success", typeLogger: TypeLogger.info);
+    } else {
+      customLogger(
+          msg: "Create account error ${result.error}",
+          typeLogger: TypeLogger.error);
+    }
   }
 
   void printValues() {
-    print("title: ${txtTitle.text}");
-    print("username: ${txtUsername.text}");
-    print("password: ${txtPassword.text}");
+    customLogger(msg: '''
+      title: ${txtTitle.text}
+      username: ${txtUsername.text}
+      password: ${txtPassword.text}
+      note: ${txtNote.text}
+     ''', typeLogger: TypeLogger.info);
     for (var element in dynamicTextFieldNotifier.value) {
-      print("${element.customField.key}:  ${element.controller.text}");
-      print("type: ${element.customField.typeField.type}");
+      customLogger(
+          msg:
+              "${element.customField.key}(${element.customField.typeField.type}) :  ${element.controller.text}",
+          typeLogger: TypeLogger.info);
     }
+  }
 
-    print("key auth: ${keyAuthentication.value}");
-    print("note: ${txtNote.text}");
-
-    print("hello\n world");
+  void resetFields() {
+    txtTitle.clear();
+    txtUsername.clear();
+    txtPassword.clear();
+    txtNote.clear();
+    dynamicTextFieldNotifier.value = [];
+    notifyListeners();
   }
 
   void handleAddField() {

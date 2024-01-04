@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:password_manage_app/core/services/otp_generator.dart';
+import 'package:password_manage_app/core/core.dart';
+import 'package:password_manage_app/main.dart';
 import 'package:password_manage_app/ui/base/base.dart';
-import 'package:password_manage_app/ui/route/route.dart';
 import 'package:password_manage_app/ui/screens/create_account/components/create_account_components.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class CreateAccountView extends StatefulWidget {
   const CreateAccountView({Key? key}) : super(key: key);
@@ -22,6 +23,9 @@ class CreateAccountViewState extends State<CreateAccountView> {
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 viewModel.printValues();
+                viewModel.handleInsertAccount(
+                  context: context,
+                );
               },
               child: const Icon(Icons.check),
             ),
@@ -74,195 +78,27 @@ class CreateAccountViewState extends State<CreateAccountView> {
                     const SizedBox(
                       height: 10,
                     ),
-                    DoubleValueListenBuilder<bool, String>(
-                      viewModel.isEnterOTPFromKeyboard,
-                      viewModel.keyAuthentication,
-                      builder: (_, isEnterOTPFromKeyboard, keyAuthentication,
-                          child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Khóa xác thực 2 lớp (TOTP)",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800]),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            viewModel.keyAuthentication.value.isNotEmpty
-                                ? Row(
-                                    children: [
-                                      Expanded(
-                                        child: CardCustomWidget(
-                                          child: OtpTextWithCountdown(
-                                            keySecret:
-                                                viewModel.txtKeySetOTP.text,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      IconButton(
-                                        tooltip: isEnterOTPFromKeyboard == true
-                                            ? "Ẩn ô nhập"
-                                            : "Hiện ô nhập",
-                                        onPressed: () {
-                                          viewModel.handleClearKeyAuth();
-                                        },
-                                        icon: const Icon(Icons.cancel_outlined),
-                                      )
-                                    ],
-                                  )
-                                : Row(
-                                    children: [
-                                      Expanded(
-                                        child: isEnterOTPFromKeyboard
-                                            ? CustomTextField(
-                                                requiredTextField: true,
-                                                controller:
-                                                    viewModel.txtKeySetOTP,
-                                                textInputAction:
-                                                    TextInputAction.go,
-                                                textAlign: TextAlign.start,
-                                                onFieldSubmitted: (value) {},
-                                                autoFocus: true,
-                                                hintText:
-                                                    "Nhập khóa xác thực 2 lớp",
-                                                isObscure: false,
-                                                maxLines: 1,
-                                              )
-                                            : CustomButtonWidget(
-                                                margin: const EdgeInsets.all(0),
-                                                border: Border.all(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceVariant),
-                                                onPressed: () async {
-                                                  var uri =
-                                                      await Navigator.pushNamed(
-                                                          context,
-                                                          RoutePaths
-                                                              .qrcodeScaner);
-
-                                                  if (uri != null) {
-                                                    var otpCustom =
-                                                        OTPCustom.fromUri(
-                                                                uri.toString())
-                                                            .toJson();
-                                                    viewModel
-                                                        .handleShowTextFieldEnterOTP();
-                                                    viewModel
-                                                            .txtKeySetOTP.text =
-                                                        otpCustom['secret'];
-                                                    viewModel.keyAuthentication
-                                                            .value =
-                                                        otpCustom['secret'];
-
-                                                    viewModel.txtTitle.text =
-                                                        otpCustom['issuer'];
-
-                                                    viewModel.txtUsername.text =
-                                                        otpCustom[
-                                                            'accountName'];
-                                                  }
-                                                },
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .secondaryContainer,
-                                                text: "",
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Icon(
-                                                        Icons
-                                                            .qr_code_scanner_rounded,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .primary),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                      'Thêm khóa xác thực 2 lớp',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      IconButton(
-                                          tooltip:
-                                              isEnterOTPFromKeyboard == true
-                                                  ? "Ẩn ô nhập"
-                                                  : "Hiện ô nhập",
-                                          onPressed: () {
-                                            viewModel
-                                                .handleShowTextFieldEnterOTP();
-                                          },
-                                          icon: Icon(isEnterOTPFromKeyboard ==
-                                                  true
-                                              ? Icons.cancel_outlined
-                                              : Icons.keyboard_alt_outlined)),
-                                    ],
-                                  ),
-                            isEnterOTPFromKeyboard &&
-                                    viewModel.keyAuthentication.value.isEmpty
-                                ? CustomButtonWidget(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    border: Border.all(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .surfaceVariant),
-                                    onPressed: () {},
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondaryContainer,
-                                    text: "",
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Icon(Icons.check,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          'Thêm khóa',
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : const SizedBox.shrink()
-                          ],
-                        );
-                      },
-                    ),
+                    ValueListenableBuilder(
+                        valueListenable: viewModel.categorySelected,
+                        builder: (context, value, child) {
+                          return CustomTextField(
+                            requiredTextField: true,
+                            readOnly: true,
+                            suffixIcon: const Icon(Icons.keyboard_arrow_down),
+                            titleTextField: "Select Category",
+                            controller: TextEditingController(),
+                            textInputAction: TextInputAction.next,
+                            textAlign: TextAlign.start,
+                            hintText: value.name,
+                            maxLines: 1,
+                            isObscure: false,
+                            onTap: () {
+                              bottomSheetSelectCategory(
+                                viewModel: viewModel,
+                              );
+                            },
+                          );
+                        }),
                     const SizedBox(
                       height: 10,
                     ),
@@ -351,7 +187,9 @@ class CreateAccountViewState extends State<CreateAccountView> {
               ),
             ));
       },
-      onViewModelReady: (CreateAccountViewModel viewModel) {},
+      onViewModelReady: (CreateAccountViewModel viewModel) {
+        viewModel.initData();
+      },
     );
   }
 }

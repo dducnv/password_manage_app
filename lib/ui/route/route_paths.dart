@@ -5,5 +5,4 @@ class RoutePaths {
   static const String detailsAccount = '/details_account';
   static const String createCategory = '/create_category';
   static const String passwordGenerator = '/password_generator';
-  static const String qrcodeScaner = '/qrcode_scaner';
 }

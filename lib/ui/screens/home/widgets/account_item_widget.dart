@@ -15,7 +15,8 @@ class AccountItemWidget extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, RoutePaths.detailsAccount);
+          Navigator.pushNamed(context, RoutePaths.detailsAccount,
+              arguments: {"id": accountModel.id});
         },
         child: Container(
           padding: const EdgeInsets.only(top: 10, left: 16, right: 16),

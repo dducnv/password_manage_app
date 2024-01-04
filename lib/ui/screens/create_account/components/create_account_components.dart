@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:password_manage_app/core/utils/utils.dart';
+import 'package:password_manage_app/core/core.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
@@ -133,35 +133,54 @@ extension CretaeAccountComponent on CreateAccountViewState {
       ),
     );
   }
+
+  Future<void> bottomSheetSelectCategory({
+    required CreateAccountViewModel viewModel,
+  }) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                      "Chọn danh mục (${viewModel.listCategory.value.length})"),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: viewModel.listCategory.value.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        selected: viewModel.categorySelected.value ==
+                            viewModel.listCategory.value[index],
+                        onTap: () {
+                          viewModel.categorySelected.value =
+                              viewModel.listCategory.value[index];
+                          Navigator.pop(context);
+                        },
+                        leading: Icon(
+                          Icons.folder,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        title: Text(
+                          viewModel.listCategory.value[index].name ?? "",
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
 }
-
-// Container(
-//                     clipBehavior: Clip.antiAlias,
-//                     decoration: BoxDecoration(
-//                       color: Colors.white,
-//                       border: Border.all(color: Colors.grey.shade300),
-//                       borderRadius: BorderRadius.circular(8),
-//                     ),
-//                     child: ListTile(
-//                       contentPadding: EdgeInsets.zero,
-//                       leadingAndTrailingTextStyle: const TextStyle(
-//                         fontSize: 16,
-//                         fontWeight: FontWeight.w500,
-//                       ),
-//                       minLeadingWidth: 0,
-//                       onTap: () {
-//                         typeTextFieldSelected = typeTextField[index];
-//                         onChangeTypeField(typeTextField[index]);
-//                       },
-//                       title: Text(typeTextField[index].title),
-//                       leading: Radio(
-//                         value: typeTextField[index],
-//                         groupValue: typeTextFieldSelected,
-//                         onChanged: (TypeTextField? value) {
-//                           typeTextFieldSelected = typeTextField[index];
-//                           onChangeTypeField(value!);
-//                         },
-//                       ),
-//                     ),
-//                   );
-

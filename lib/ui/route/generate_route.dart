@@ -10,7 +10,7 @@ class AppGenerateRoute {
 
     switch (settings.name) {
       case RoutePaths.homeRoute:
-        widget = const MainView();
+        widget = const HomeView();
         break;
       case RoutePaths.settingRoute:
         widget = const SettingView();
@@ -19,13 +19,13 @@ class AppGenerateRoute {
         widget = const CreateAccountView();
         break;
       case RoutePaths.detailsAccount:
-        widget = const DetailsAccountView();
+        final args = settings.arguments as Map<String, dynamic>;
+        widget = DetailsAccountView(
+          id: args['id'],
+        );
         break;
       case RoutePaths.passwordGenerator:
         widget = const PasswordGeneratorView();
-      case RoutePaths.qrcodeScaner:
-        widget = const QrScannerKeyView();
-        break;
     }
     return Platform.isIOS
         ? CupertinoPageRoute(

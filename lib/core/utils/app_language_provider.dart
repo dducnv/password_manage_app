@@ -9,9 +9,6 @@ class AppLanguageProvider extends ChangeNotifier {
   fetchLocale() async {
     var currentLang =
         await SecureStorage.instance.read(SecureStorageKeys.appLang.name) ?? "";
-
-    print(currentLang.toString());
-
     if (currentLang == "vi") {
       _appLocale = const Locale("vi");
       return Null;

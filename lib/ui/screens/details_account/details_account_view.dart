@@ -4,7 +4,8 @@ import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
 class DetailsAccountView extends StatefulWidget {
-  const DetailsAccountView({Key? key}) : super(key: key);
+  final String id;
+  const DetailsAccountView({Key? key, required this.id}) : super(key: key);
 
   @override
   State<DetailsAccountView> createState() => _DetailsAccountViewState();
@@ -13,12 +14,20 @@ class DetailsAccountView extends StatefulWidget {
 class _DetailsAccountViewState extends State<DetailsAccountView> {
   @override
   Widget build(BuildContext context) {
-    print("build DetailsAccountView");
     return BaseView<DetailsAccountViewModel>(
       builder: (context, viewModel, _) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Details Account'),
+            title: Text('${viewModel.account.title}',
+                overflow: TextOverflow.ellipsis),
+            actions: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.mode_edit_outline,
+                    color: Colors.white,
+                  ))
+            ],
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -26,39 +35,29 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondaryContainer,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: const Icon(
-                            Icons.shopping_cart_rounded,
-                            size: 50,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text("Google Account",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14)),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 10),
-                  Text("One-Time Password",
+                  Text("Thông tin đăng nhập",
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[800])),
                   const SizedBox(height: 5),
-                  const CardCustomWidget(
-                    child: OtpTextWithCountdown(keySecret: "Y752SG5C5JL7UNYC"),
+                  CardCustomWidget(
+                    child: Column(
+                      children: [
+                        ItemCoppyValue(
+                          title: 'Email/Username',
+                          value: viewModel.account.email ?? "",
+                        ),
+                        const SizedBox(height: 10),
+                        ItemCoppyValue(
+                          title: 'Password',
+                          value: viewModel.account.password ?? "",
+                          isLastItem: true,
+                          isPrivateValue: true,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Text("Category",
@@ -67,14 +66,15 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[800])),
                   const SizedBox(height: 5),
-                  const CardCustomWidget(
+                  CardCustomWidget(
                       child: Row(
                     children: [
-                      Icon(Icons.folder, color: Colors.grey),
-                      SizedBox(width: 10),
+                      Icon(Icons.folder,
+                          color: Theme.of(context).colorScheme.primary),
+                      const SizedBox(width: 10),
                       Text(
-                        "Social Network",
-                        style: TextStyle(
+                        viewModel.account.category?.name ?? "",
+                        style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: Colors.grey),
@@ -82,118 +82,117 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                     ],
                   )),
                   const SizedBox(height: 10),
-                  Text("Thông tin đăng nhập",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[800])),
-                  const SizedBox(height: 5),
-                  const CardCustomWidget(
+                  viewModel.txtNote.text.isEmpty
+                      ? const SizedBox.shrink()
+                      : Column(
+                          children: [
+                            ValueListenableBuilder(
+                              valueListenable: viewModel.isEditNote,
+                              builder: (_, value, child) {
+                                return Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("Note",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey[800])),
+                                        CustomButtonWidget(
+                                            borderRadiusGeometry:
+                                                BorderRadius.circular(50),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .secondaryContainer,
+                                            margin: const EdgeInsets.only(
+                                                right: 10),
+                                            padding: const EdgeInsets.all(0),
+                                            text: "Edit",
+                                            miniumSize: const Size(50, 15),
+                                            onPressed: () {
+                                              viewModel.isEditNote.value =
+                                                  !viewModel.isEditNote.value;
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 3),
+                                              child: Text(
+                                                  !value ? "Edit" : "Done",
+                                                  style: const TextStyle(
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.white)),
+                                            )) // 1")),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 5),
+                                    CustomTextField(
+                                      borderRadius: BorderRadius.circular(25),
+                                      contentPadding: const EdgeInsets.all(10),
+                                      readOnly: !value,
+                                      autoFocus: true,
+                                      borderColor: value
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .surfaceVariant,
+                                      requiredTextField: false,
+                                      textInputType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.newline,
+                                      textAlign: TextAlign.start,
+                                      minLines: 1,
+                                      maxLines: null,
+                                      isObscure: false,
+                                      controller: viewModel.txtNote,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                  Visibility(
+                    visible:
+                        viewModel.account.customFields?.isNotEmpty ?? false,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ItemCoppyValue(
-                          title: 'Email/Username',
-                          value: 'Google Account',
-                        ),
-                        SizedBox(height: 10),
-                        ItemCoppyValue(
-                          title: 'Password',
-                          value: '123456789',
-                          isLastItem: true,
-                          isPrivateValue: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ValueListenableBuilder(
-                    valueListenable: viewModel.isEditNote,
-                    builder: (_, value, child) {
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Text("Thông tin tuỳ chỉnh",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey[800])),
+                        const SizedBox(height: 5),
+                        CardCustomWidget(
+                          child: Column(
                             children: [
-                              Text("Note",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey[800])),
-                              CustomButtonWidget(
-                                  borderRadiusGeometry:
-                                      BorderRadius.circular(50),
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer,
-                                  margin: const EdgeInsets.only(right: 10),
-                                  padding: const EdgeInsets.all(0),
-                                  text: "Edit",
-                                  miniumSize: const Size(50, 15),
-                                  onPressed: () {
-                                    viewModel.isEditNote.value =
-                                        !viewModel.isEditNote.value;
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 3),
-                                    child: Text(!value ? "Edit" : "Done",
-                                        style: const TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                  )) // 1")),
+                              ...viewModel.account.customFields?.map(
+                                    (e) => ItemCoppyValue(
+                                      title: e.keys.first,
+                                      value: e.values.firstOrNull ?? "",
+                                      isPrivateValue: e["typeField"] != null
+                                          ? e["typeField"]
+                                              .toLowerCase()
+                                              .contains("password")
+                                          : false,
+                                      isLastItem: viewModel
+                                              .account.customFields?.last ==
+                                          e,
+                                    ),
+                                  ) ??
+                                  [],
+                              const SizedBox(height: 10),
                             ],
                           ),
-                          const SizedBox(height: 5),
-                          CustomTextField(
-                            borderRadius: BorderRadius.circular(25),
-                            contentPadding: const EdgeInsets.all(10),
-                            readOnly: !value,
-                            autoFocus: true,
-                            borderColor: value
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.surfaceVariant,
-                            requiredTextField: false,
-                            textInputType: TextInputType.multiline,
-                            textInputAction: TextInputAction.newline,
-                            textAlign: TextAlign.start,
-                            minLines: 1,
-                            maxLines: null,
-                            isObscure: false,
-                            controller: TextEditingController(
-                                text:
-                                    '1e341-0351a\n5a6a4-a1f23\n04a44-99c44\nd25ad-d68e1\nf86dd-2ed33'),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text("Thông tin tuỳ chỉnh",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[800])),
-                  const SizedBox(height: 5),
-                  const CardCustomWidget(
-                    child: Column(
-                      children: [
-                        ItemCoppyValue(
-                          title: 'Public Key',
-                          value: '123456789',
-                        ),
-                        ItemCoppyValue(
-                          title: 'Type',
-                          value: 'Key for my app',
-                        ),
-                        SizedBox(height: 10),
-                        ItemCoppyValue(
-                          title: 'Private Key',
-                          value: '123456789',
-                          isLastItem: true,
-                          isPrivateValue: true,
                         ),
                       ],
                     ),
@@ -204,7 +203,9 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
           ),
         );
       },
-      onViewModelReady: (DetailsAccountViewModel viewModel) {},
+      onViewModelReady: (DetailsAccountViewModel viewModel) {
+        viewModel.getDetailAccount(widget.id);
+      },
     );
   }
 }

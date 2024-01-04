@@ -1,14 +1,14 @@
+import 'package:password_manage_app/core/core.dart';
 import 'package:password_manage_app/main.dart';
-import 'package:password_manage_app/ui/screens/create_account/create_account.dart';
-import 'package:password_manage_app/ui/screens/details_account/details_account.dart';
-import 'package:password_manage_app/ui/screens/main_view/main_view_model.dart';
-import 'package:password_manage_app/ui/screens/home/home.dart';
-import 'package:password_manage_app/ui/screens/password_generator/password_generator.dart';
-import 'package:password_manage_app/ui/screens/setting/setting.dart';
 
-import '../../ui/screens/create_category/create_category.dart';
+import 'package:password_manage_app/ui/screens/screen.dart';
 
-enum DependencyInstance { nwUsecaseProvider }
+enum DependencyInstance {
+  nwUsecaseProvider,
+  sqlUsecaseProvider,
+  sqlCategoryUsecase,
+  sqlAccountUsecase,
+}
 
 class ServiceLocator {
   static final instance = ServiceLocator._internal();
@@ -18,18 +18,42 @@ class ServiceLocator {
     _registerViewModel();
   }
 
-  void _registerUseCase() {}
+  void _registerUseCase() {
+    locator.registerLazySingleton<UsecaseProvider>(() => SqlUsecaseProvider(),
+        instanceName: DependencyInstance.sqlUsecaseProvider.name);
+
+    locator.registerFactory<AccountUseCase>(
+        () => locator
+            .get<UsecaseProvider>(
+                instanceName: DependencyInstance.sqlUsecaseProvider.name)
+            .getAccountUseCase(),
+        instanceName: DependencyInstance.sqlAccountUsecase.name);
+
+    locator.registerFactory<CategoryUseCase>(
+        () => locator
+            .get<UsecaseProvider>(
+                instanceName: DependencyInstance.sqlUsecaseProvider.name)
+            .getCategoryUseCase(),
+        instanceName: DependencyInstance.sqlCategoryUsecase.name);
+  }
 
   void _registerViewModel() {
-    locator.registerFactory<MainViewModel>(() => MainViewModel());
-    locator.registerFactory<HomeViewModel>(() => HomeViewModel());
+    locator.registerFactory<HomeViewModel>(() => HomeViewModel(
+        sqlCategoryUsecase: locator.get<CategoryUseCase>(
+            instanceName: DependencyInstance.sqlCategoryUsecase.name)));
     locator.registerFactory<SettingViewModel>(() => SettingViewModel());
     locator.registerFactory<PasswordGeneratorViewModel>(
         () => PasswordGeneratorViewModel());
-    locator.registerFactory<DetailsAccountViewModel>(
-        () => DetailsAccountViewModel());
-    locator.registerFactory<CreateAccountViewModel>(
-        () => CreateAccountViewModel());
+    locator.registerFactory<DetailsAccountViewModel>(() =>
+        DetailsAccountViewModel(
+            sqlAccountUsecase: locator.get<AccountUseCase>(
+                instanceName: DependencyInstance.sqlAccountUsecase.name)));
+    locator.registerFactory<CreateAccountViewModel>(() =>
+        CreateAccountViewModel(
+            sqlAccountUsecase: locator.get<AccountUseCase>(
+                instanceName: DependencyInstance.sqlAccountUsecase.name),
+            sqlCategoryUsecase: locator.get<CategoryUseCase>(
+                instanceName: DependencyInstance.sqlCategoryUsecase.name)));
     locator.registerFactory<CreateCategoryViewModel>(
         () => CreateCategoryViewModel());
   }

@@ -6,7 +6,6 @@ import 'package:password_manage_app/core/core.dart';
 import 'package:password_manage_app/core/service_locator/service_locator.dart';
 import 'package:password_manage_app/ui/route/route.dart';
 import 'package:provider/provider.dart';
-import 'package:timezone/data/latest.dart' as timezone;
 
 GetIt locator = GetIt.instance;
 
@@ -15,9 +14,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   ServiceLocator.instance.registerDependencies();
+  await SqliteStack.instance.inititalDB([
+    AccountModel().createTableCommand,
+    CategoryModel().createTableCommand,
+  ]);
   AppLanguageProvider appLanguage = AppLanguageProvider();
   await appLanguage.fetchLocale();
-  timezone.initializeTimeZones();
   var getThemeStorage = await SecureStorage.instance
           .read(SecureStorageKeys.themMode.toString()) ??
       "";

@@ -42,13 +42,3 @@ class CardItem<T> extends StatelessWidget {
     );
   }
 }
-// Material(
-//                 color: Colors.transparent,
-//                 child: InkWell(
-//                   onTap: () {},
-//                   child: const ListTile(
-//                       title: Text("Google"),
-//                       subtitle: Text("Google Account"),
-//                       trailing: Icon(Icons.arrow_forward_ios)),
-//                 ),
-//               );
