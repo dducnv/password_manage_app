@@ -7,7 +7,7 @@ class SqlAccountUsecase implements AccountUseCase {
 
   @override
   Future<Result<bool, Exception>> deleteAccount(AccountModel account) {
-    return repository.delete(account);
+    return repository.delete(account, id: account.id!, where: "acc_uid");
   }
 
   @override
@@ -57,5 +57,10 @@ class SqlAccountUsecase implements AccountUseCase {
   @override
   Future<Result<bool, Exception>> saveAccount(AccountModel account) {
     return repository.insert(account);
+  }
+
+  @override
+  Future<Result<bool, Exception>> updateAccount(AccountModel account) {
+    return repository.update(account, id: account.id!, where: "acc_uid");
   }
 }

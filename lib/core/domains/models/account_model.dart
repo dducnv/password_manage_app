@@ -5,13 +5,13 @@ import 'package:password_manage_app/core/core.dart';
 
 class AccountModel extends SqliteTable implements Comparable {
   final String? id;
-  final String? title;
-  final String? email;
-  final String? password;
+  String? title;
+  String? email;
+  String? password;
   String? note;
-  final List<Map<String, dynamic>>? customFields;
-  final String? icon;
-  final CategoryModel? category;
+  List<Map<String, dynamic>>? customFields;
+  String? icon;
+  CategoryModel? category;
 
   AccountModel({
     this.id,
@@ -126,5 +126,5 @@ class AccountModel extends SqliteTable implements Comparable {
   }
 
   @override
-  String get uid => const Uuid().v4();
+  String get uid => id ?? const Uuid().v4();
 }

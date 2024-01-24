@@ -146,41 +146,125 @@ extension CretaeAccountComponent on CreateAccountViewState {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                      "Chọn danh mục (${viewModel.listCategory.value.length})"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                          "Chọn danh mục (${viewModel.dataShared.categoryList.value.length})"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: IconButton(
+                          onPressed: () {
+                            bottomSheetCreateCategory(
+                                context: context, viewModel: viewModel);
+                          },
+                          icon: const Icon(Icons.add)),
+                    )
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: viewModel.listCategory.value.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        selected: viewModel.categorySelected.value ==
-                            viewModel.listCategory.value[index],
-                        onTap: () {
-                          viewModel.categorySelected.value =
-                              viewModel.listCategory.value[index];
-                          Navigator.pop(context);
-                        },
-                        leading: Icon(
-                          Icons.folder,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        title: Text(
-                          viewModel.listCategory.value[index].name ?? "",
+                ValueListenableBuilder(
+                    valueListenable:
+                        viewModel.dataShared.categoryListForFilterBar,
+                    builder: (context, cateList, child) {
+                      return Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: cateList.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              selected: viewModel.categorySelected.value ==
+                                  cateList[index],
+                              onTap: () {
+                                viewModel.categorySelected.value =
+                                    cateList[index];
+                                Navigator.pop(context);
+                              },
+                              leading: Icon(
+                                Icons.folder,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              title: Text(
+                                cateList[index].name ?? "",
+                              ),
+                            );
+                          },
                         ),
                       );
-                    },
-                  ),
-                ),
+                    })
               ],
             ),
           );
         });
+  }
+
+  Future<void> bottomSheetCreateCategory({
+    required BuildContext context,
+    required CreateAccountViewModel viewModel,
+  }) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: SingleChildScrollView(
+            child: Column(children: [
+              CustomTextField(
+                  autoFocus: true,
+                  requiredTextField: true,
+                  titleTextField: "Tên danh mục",
+                  controller: viewModel.txtCategoryName,
+                  textInputAction: TextInputAction.go,
+                  textAlign: TextAlign.start,
+                  hintText: "Nhập tên danh mục",
+                  maxLines: 1,
+                  isObscure: false,
+                  onFieldSubmitted: (value) {
+                    viewModel.handleCreateCategory(
+                      context: context,
+                    );
+                  }),
+              const SizedBox(height: 16),
+              CustomButtonWidget(
+                margin: const EdgeInsets.all(0),
+                onPressed: () {
+                  viewModel.handleCreateCategory(
+                    context: context,
+                  );
+                  isCreatedCategory = true;
+                },
+                text: "",
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      "Thêm danh mục",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+        );
+      },
+      isScrollControlled: true,
+    );
   }
 }

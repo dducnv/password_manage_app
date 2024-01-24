@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:password_manage_app/ui/screens/screen.dart';
+import 'package:privacy_screen/privacy_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:password_manage_app/core/core.dart';
 import 'package:password_manage_app/core/service_locator/service_locator.dart';
@@ -20,6 +22,7 @@ void main() async {
   ]);
   AppLanguageProvider appLanguage = AppLanguageProvider();
   await appLanguage.fetchLocale();
+  await LocalAuthConfig.instance.init();
   var getThemeStorage = await SecureStorage.instance
           .read(SecureStorageKeys.themMode.toString()) ??
       "";
@@ -30,6 +33,21 @@ void main() async {
   } else {
     currentThemeMode = getThemeStorage;
   }
+
+  await PrivacyScreen.instance.enable(
+    iosOptions: const PrivacyIosOptions(
+      enablePrivacy: true,
+      privacyImageName: "LaunchImage",
+      autoLockAfterSeconds: 5,
+      lockTrigger: IosLockTrigger.didEnterBackground,
+    ),
+    androidOptions: const PrivacyAndroidOptions(
+      enableSecure: true,
+      autoLockAfterSeconds: 5,
+    ),
+    backgroundColor: Colors.white.withOpacity(0),
+    blurEffect: PrivacyBlurEffect.extraLight,
+  );
 
   runApp(EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('vi')],
@@ -55,6 +73,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => AppLanguageProvider(),
         ),
+        ChangeNotifierProvider(create: (context) => DataShared.instance)
       ],
       child: Consumer<AppLanguageProvider>(builder: (ctx, langProvider, _) {
         return Consumer<ThemeProvider>(
@@ -100,31 +119,39 @@ class MyApp extends StatelessWidget {
               ),
             ),
             title: 'Password Manager',
-            initialRoute: RoutePaths.homeRoute,
+            initialRoute: RoutePaths.splashRote,
             onGenerateRoute: AppGenerateRoute.generateRoute,
             builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context)
-                    .copyWith(textScaler: const TextScaler.linear(1)),
-                child: ColoredBox(
-                  color: Theme.of(context).colorScheme.background,
-                  child: SafeArea(
-                    bottom: false,
-                    right: false,
-                    left: false,
-                    child: AnnotatedRegion(
-                        value: SystemUiOverlayStyle(
-                          statusBarColor: Colors.transparent,
-                          statusBarBrightness:
-                              themeObject.mode == ThemeMode.light
-                                  ? Brightness.light
-                                  : Brightness.dark,
-                          statusBarIconBrightness:
-                              themeObject.mode == ThemeMode.light
-                                  ? Brightness.dark
-                                  : Brightness.light,
-                        ),
-                        child: child!),
+              return PrivacyGate(
+                lockBuilder: (ctx) => const LocalAuthView(),
+                // Give it a key
+                navigatorKey: GlobalKeys.appRootNavigatorKey,
+                // onLifeCycleChanged: (value) => print(value),
+                // onLock: () => print("onLock"),
+                // onUnlock: () => print("onUnlock"),
+                child: MediaQuery(
+                  data: MediaQuery.of(context)
+                      .copyWith(textScaler: const TextScaler.linear(1)),
+                  child: ColoredBox(
+                    color: Theme.of(context).colorScheme.background,
+                    child: SafeArea(
+                      bottom: false,
+                      right: false,
+                      left: false,
+                      child: AnnotatedRegion(
+                          value: SystemUiOverlayStyle(
+                            statusBarColor: Colors.transparent,
+                            statusBarBrightness:
+                                themeObject.mode == ThemeMode.light
+                                    ? Brightness.light
+                                    : Brightness.dark,
+                            statusBarIconBrightness:
+                                themeObject.mode == ThemeMode.light
+                                    ? Brightness.dark
+                                    : Brightness.light,
+                          ),
+                          child: child!),
+                    ),
                   ),
                 ),
               );

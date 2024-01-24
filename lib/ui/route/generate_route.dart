@@ -12,11 +12,17 @@ class AppGenerateRoute {
       case RoutePaths.homeRoute:
         widget = const HomeView();
         break;
+      case RoutePaths.splashRote:
+        widget = const SplashScreenView();
+        break;
       case RoutePaths.settingRoute:
         widget = const SettingView();
         break;
       case RoutePaths.createAccount:
-        widget = const CreateAccountView();
+        final args = settings.arguments as Map<String, dynamic>;
+        widget = CreateAccountView(
+          categoryModel: args['categoryModel'],
+        );
         break;
       case RoutePaths.detailsAccount:
         final args = settings.arguments as Map<String, dynamic>;
@@ -24,8 +30,18 @@ class AppGenerateRoute {
           id: args['id'],
         );
         break;
+      case RoutePaths.updateAccount:
+        final args = settings.arguments as Map<String, dynamic>;
+        widget = UpdateAccountView(
+          id: args['id'],
+        );
+        break;
       case RoutePaths.passwordGenerator:
         widget = const PasswordGeneratorView();
+        break;
+      case RoutePaths.localAuthView:
+        widget = const LocalAuthView();
+        break;
     }
     return Platform.isIOS
         ? CupertinoPageRoute(

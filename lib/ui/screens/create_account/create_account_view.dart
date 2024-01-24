@@ -1,20 +1,22 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/core.dart';
-import 'package:password_manage_app/main.dart';
 import 'package:password_manage_app/ui/base/base.dart';
 import 'package:password_manage_app/ui/screens/create_account/components/create_account_components.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
-import 'package:provider/provider.dart';
 
 class CreateAccountView extends StatefulWidget {
-  const CreateAccountView({Key? key}) : super(key: key);
+  final CategoryModel categoryModel;
+  const CreateAccountView({Key? key, required this.categoryModel})
+      : super(key: key);
 
   @override
   State<CreateAccountView> createState() => CreateAccountViewState();
 }
 
 class CreateAccountViewState extends State<CreateAccountView> {
+  bool isCreatedCategory = false;
   @override
   Widget build(BuildContext context) {
     return BaseView<CreateAccountViewModel>(
@@ -30,6 +32,12 @@ class CreateAccountViewState extends State<CreateAccountView> {
               child: const Icon(Icons.check),
             ),
             appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop({"filter": "reload"});
+                },
+              ),
               elevation: 0,
               scrolledUnderElevation: 0,
               title: const Text('Create Account'),
@@ -189,6 +197,9 @@ class CreateAccountViewState extends State<CreateAccountView> {
       },
       onViewModelReady: (CreateAccountViewModel viewModel) {
         viewModel.initData();
+        if (widget.categoryModel.id != "-1") {
+          viewModel.categorySelected.value = widget.categoryModel;
+        }
       },
     );
   }

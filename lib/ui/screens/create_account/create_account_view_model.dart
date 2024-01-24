@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/core.dart';
-import 'package:password_manage_app/core/utils/logger.dart';
 import 'package:password_manage_app/ui/base/base.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
@@ -15,11 +14,10 @@ class CreateAccountViewModel extends BaseViewModel {
   final TextEditingController txtPassword = TextEditingController();
   final TextEditingController txtFieldTitle = TextEditingController();
   final TextEditingController txtNote = TextEditingController();
+  final TextEditingController txtCategoryName = TextEditingController();
 
   ValueNotifier<List<DynamicTextField>> dynamicTextFieldNotifier =
       ValueNotifier<List<DynamicTextField>>([]);
-
-  ValueNotifier<bool> isEnterOTPFromKeyboard = ValueNotifier<bool>(false);
 
   List<TypeTextField> typeTextFields = [
     TypeTextField(title: 'Text', type: 'text'),
@@ -31,11 +29,10 @@ class CreateAccountViewModel extends BaseViewModel {
     TypeTextField(title: 'Text', type: 'text'),
   );
 
-  final ValueNotifier<List<CategoryModel>> listCategory =
-      ValueNotifier<List<CategoryModel>>([]);
-
   ValueNotifier<CategoryModel> categorySelected =
       ValueNotifier<CategoryModel>(CategoryModel(name: "Select category"));
+
+  DataShared get dataShared => DataShared.instance;
 
   void initData() {
     typeTextFieldSelected.value = typeTextFields[0];
@@ -45,37 +42,30 @@ class CreateAccountViewModel extends BaseViewModel {
     txtPassword.clear();
     txtFieldTitle.clear();
 
-    getCategories();
-    getAccounts();
     notifyListeners();
-  }
-
-  void handleShowTextFieldEnterOTP() {
-    isEnterOTPFromKeyboard.value = !isEnterOTPFromKeyboard.value;
-    setState(ViewState.busy);
-  }
-
-  void getCategories() async {
-    Result<List<CategoryModel>, Exception> listCategory =
-        await sqlCategoryUsecase.getCategories();
-    if (listCategory.isSuccess) {
-      this.listCategory.value = listCategory.data ?? [];
-    } else {}
-  }
-
-  Future<void> getAccounts() async {
-    Result<List<AccountModel>, Exception> listAccounts =
-        await sqlAccountUsecase.getAccounts();
-
-    for (AccountModel account in listAccounts.data ?? []) {
-      customLogger(msg: "${account.toJson()}", typeLogger: TypeLogger.info);
-    }
   }
 
   Future<void> handleInsertAccount({
     required BuildContext context,
   }) async {
     printValues();
+    //validate
+    if (txtTitle.text.isEmpty) {
+      return;
+    }
+
+    if (txtUsername.text.isEmpty) {
+      return;
+    }
+
+    if (txtPassword.text.isEmpty) {
+      return;
+    }
+
+    if (categorySelected.value.name == "Select category") {
+      return;
+    }
+
     AccountModel account = AccountModel(
       title: txtTitle.text,
       email: txtUsername.text,
@@ -86,6 +76,7 @@ class CreateAccountViewModel extends BaseViewModel {
           .map((e) => {
                 e.customField.key: e.controller.text,
                 "typeField": e.customField.typeField.type,
+                "hintText": e.customField.hintText
               })
           .toList(),
     );
@@ -95,10 +86,12 @@ class CreateAccountViewModel extends BaseViewModel {
     if (result.isSuccess) {
       resetFields();
       // ignore: use_build_context_synchronously
-      Navigator.of(context).pop({
-        "isSuccess": true,
-      });
+      dataShared.getAccounts();
+      dataShared.getCategories();
+
       customLogger(msg: "Create account success", typeLogger: TypeLogger.info);
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop({"filter": "reload"});
     } else {
       customLogger(
           msg: "Create account error ${result.error}",
@@ -178,6 +171,29 @@ class CreateAccountViewModel extends BaseViewModel {
     txtFieldTitle.clear();
 
     notifyListeners();
+  }
+
+  void handleCreateCategory({
+    required BuildContext context,
+  }) async {
+    if (txtCategoryName.text.isEmpty) {
+      return;
+    }
+
+    CategoryModel categoryModel = CategoryModel(name: txtCategoryName.text);
+
+    Result<bool, Exception> result =
+        await sqlCategoryUsecase.saveCategory(categoryModel);
+
+    if (result.isSuccess) {
+      dataShared.getCategories();
+      txtCategoryName.clear();
+
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+    } else {
+      customLogger(msg: result.error.toString(), typeLogger: TypeLogger.error);
+    }
   }
 
   @override

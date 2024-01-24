@@ -15,6 +15,8 @@ class HomeView extends StatefulWidget {
 }
 
 class HomeViewState extends State<HomeView> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeViewModel>(
@@ -23,6 +25,8 @@ class HomeViewState extends State<HomeView> {
       },
       builder: (context, viewModel, _) {
         return Scaffold(
+          key: scaffoldKey,
+          drawer: const AppDrawer(),
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
@@ -30,13 +34,18 @@ class HomeViewState extends State<HomeView> {
               FloatingActionButton(
                 shape: const CircleBorder(),
                 onPressed: () async {
-                  var isCreateSuccess = await Navigator.push(
+                  dynamic isPop = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CreateAccountView()));
+                          builder: (context) => CreateAccountView(
+                              categoryModel:
+                                  viewModel.categorySelected.value)));
 
-                  if (isCreateSuccess != null) {
-                    viewModel.getCategories();
+                  if (isPop['filter'] == "reload") {
+                    Future.delayed(const Duration(milliseconds: 50), () {
+                      viewModel.handleFilterByCategory(
+                          viewModel.categorySelected.value);
+                    });
                   }
                 },
                 child: const Icon(Icons.add),
@@ -52,7 +61,15 @@ class HomeViewState extends State<HomeView> {
               title: Text(Strings.homePageTitle),
               leading: IconButton(
                 icon: const Icon(Icons.sort_rounded),
-                onPressed: () {},
+                onPressed: () {
+                  if (scaffoldKey.currentState!.isDrawerOpen) {
+                    scaffoldKey.currentState!.closeDrawer();
+                    //close drawer, if drawer is open
+                  } else {
+                    scaffoldKey.currentState!.openDrawer();
+                    //open drawer, if drawer is closed
+                  }
+                },
               ),
               actions: [
                 IconButton(
@@ -71,38 +88,98 @@ class HomeViewState extends State<HomeView> {
                   height: MediaQuery.of(context).size.height * 0.7,
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(25)),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ValueListenableBuilder(
-                            valueListenable: viewModel.listCategory,
-                            builder: (context, value, child) {
-                              return ListView.builder(
-                                  shrinkWrap: true,
-                                  dragStartBehavior: DragStartBehavior.down,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: value.length,
-                                  addAutomaticKeepAlives: true,
-                                  addRepaintBoundaries: true,
-                                  itemBuilder: (context, index) {
-                                    var cateItem = value[index];
-                                    return cateItem.accounts!.isEmpty
-                                        ? const SizedBox.shrink()
-                                        : CardItem<AccountModel>(
-                                            title: cateItem.name ?? "",
-                                            items: cateItem.accounts ?? [],
-                                            itemBuilder: (item, itemIndex) {
-                                              return AccountItemWidget(
-                                                  accountModel: item,
-                                                  isLastItem: cateItem
-                                                          .accounts!.length ==
-                                                      itemIndex + 1);
-                                            },
-                                          );
-                                  });
-                            }),
-                        const SizedBox(height: 20),
-                      ],
+                  child: RefreshIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                    onRefresh: () async {},
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        children: [
+                          ValueListenableBuilder(
+                              valueListenable:
+                                  viewModel.dataShared.categoryList,
+                              builder: (context, value, child) {
+                                return value.isEmpty || viewModel.isAccountEmpty
+                                    ? Center(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(
+                                              height: 100,
+                                            ),
+                                            Image.asset(
+                                              "assets/images/exclamation-mark.png",
+                                              width: 60,
+                                              height: 60,
+                                            ),
+                                            const Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Ấn nút"),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                CircleAvatar(
+                                                  child: Icon(Icons.add),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text("để thêm tài khoản"),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        dragStartBehavior:
+                                            DragStartBehavior.down,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: value.length,
+                                        addAutomaticKeepAlives: true,
+                                        addRepaintBoundaries: true,
+                                        itemBuilder: (context, index) {
+                                          var cateItem = value[index];
+                                          return cateItem.accounts!.isEmpty
+                                              ? const SizedBox.shrink()
+                                              : CardItem<AccountModel>(
+                                                  title: cateItem.name ?? "",
+                                                  items:
+                                                      cateItem.accounts ?? [],
+                                                  itemBuilder:
+                                                      (item, itemIndex) {
+                                                    return AccountItemWidget(
+                                                        onCallBackPop: () {
+                                                          viewModel
+                                                              .handleFilterByCategory(
+                                                                  viewModel
+                                                                      .categorySelected
+                                                                      .value);
+                                                        },
+                                                        onTapSubButton: () {
+                                                          bottomSheetOptionAccountItem(
+                                                              viewModel:
+                                                                  viewModel,
+                                                              context: context);
+                                                        },
+                                                        accountModel: item,
+                                                        isLastItem: cateItem
+                                                                .accounts!
+                                                                .length ==
+                                                            itemIndex + 1);
+                                                  },
+                                                );
+                                        });
+                              }),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -120,7 +197,7 @@ class HomeViewState extends State<HomeView> {
                         child: SizedBox(
                           height: 35,
                           child: DoubleValueListenBuilder(
-                            viewModel.listCategoryFilterBar,
+                            viewModel.dataShared.categoryListForFilterBar,
                             viewModel.categorySelected,
                             builder: (context, listCate, cateSelected, child) {
                               listCate = [
@@ -136,7 +213,7 @@ class HomeViewState extends State<HomeView> {
                                   return Material(
                                     child: Ink(
                                       decoration: BoxDecoration(
-                                        color: cateSelected!.id ==
+                                        color: cateSelected.id ==
                                                 listCate[index].id
                                             ? Theme.of(context)
                                                 .colorScheme

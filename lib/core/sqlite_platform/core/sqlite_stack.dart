@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:password_manage_app/core/utils/logger.dart';
+import 'package:password_manage_app/core/core.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

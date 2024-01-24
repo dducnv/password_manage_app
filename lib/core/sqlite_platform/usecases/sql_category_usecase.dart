@@ -1,5 +1,4 @@
 import 'package:password_manage_app/core/core.dart';
-import 'package:password_manage_app/core/utils/logger.dart';
 
 class SqlCategoryUsecase implements CategoryUseCase {
   SqliteRepository<CategoryModel> repository;

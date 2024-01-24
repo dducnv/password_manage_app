@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/core.dart';
-import 'package:password_manage_app/core/utils/logger.dart';
 import 'package:password_manage_app/ui/base/base.dart';
 
 class DetailsAccountViewModel extends BaseViewModel {
@@ -30,9 +29,23 @@ class DetailsAccountViewModel extends BaseViewModel {
 
   void handleUpdateNote() async {
     setState(ViewState.busy);
+    if (isEditNote.value == false) {
+      isEditNote.value = true;
+      setState(ViewState.idle);
+      return;
+    }
+    if (account.note == txtNote.text) {
+      isEditNote.value = false;
+      setState(ViewState.idle);
+      return;
+    }
+
     account.note = txtNote.text;
+
+    customLogger(msg: "${account.id}", typeLogger: TypeLogger.info);
+
     Result<bool, Exception> updateAccount =
-        await sqlAccountUsecase.saveAccount(account);
+        await sqlAccountUsecase.updateAccount(account);
     if (updateAccount.isSuccess) {
       isEditNote.value = false;
     } else {

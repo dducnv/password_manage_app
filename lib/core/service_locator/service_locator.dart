@@ -38,16 +38,21 @@ class ServiceLocator {
   }
 
   void _registerViewModel() {
-    locator.registerFactory<HomeViewModel>(() => HomeViewModel(
+    locator.registerFactory<HomeViewModel>(
+      () => HomeViewModel(
         sqlCategoryUsecase: locator.get<CategoryUseCase>(
-            instanceName: DependencyInstance.sqlCategoryUsecase.name)));
+            instanceName: DependencyInstance.sqlCategoryUsecase.name),
+      ),
+    );
     locator.registerFactory<SettingViewModel>(() => SettingViewModel());
     locator.registerFactory<PasswordGeneratorViewModel>(
         () => PasswordGeneratorViewModel());
-    locator.registerFactory<DetailsAccountViewModel>(() =>
-        DetailsAccountViewModel(
-            sqlAccountUsecase: locator.get<AccountUseCase>(
-                instanceName: DependencyInstance.sqlAccountUsecase.name)));
+    locator.registerFactory<DetailsAccountViewModel>(
+      () => DetailsAccountViewModel(
+        sqlAccountUsecase: locator.get<AccountUseCase>(
+            instanceName: DependencyInstance.sqlAccountUsecase.name),
+      ),
+    );
     locator.registerFactory<CreateAccountViewModel>(() =>
         CreateAccountViewModel(
             sqlAccountUsecase: locator.get<AccountUseCase>(
@@ -56,5 +61,16 @@ class ServiceLocator {
                 instanceName: DependencyInstance.sqlCategoryUsecase.name)));
     locator.registerFactory<CreateCategoryViewModel>(
         () => CreateCategoryViewModel());
+    locator
+        .registerFactory<UpdateAccountViewModel>(() => UpdateAccountViewModel(
+              sqlCategoryUsecase: locator.get<CategoryUseCase>(
+                  instanceName: DependencyInstance.sqlCategoryUsecase.name),
+              sqlAccountUsecase: locator.get<AccountUseCase>(
+                  instanceName: DependencyInstance.sqlAccountUsecase.name),
+            ));
+    locator.registerFactory<LocalAuthViewModel>(() => LocalAuthViewModel());
+    locator.registerFactory<SplashScreenViewModel>(() => SplashScreenViewModel(
+        sqlCategoryUsecase: locator.get<CategoryUseCase>(
+            instanceName: DependencyInstance.sqlCategoryUsecase.name)));
   }
 }

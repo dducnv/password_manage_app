@@ -1,53 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/core.dart';
-import 'package:password_manage_app/core/utils/logger.dart';
 import 'package:password_manage_app/ui/base/base.dart';
 
 class HomeViewModel extends BaseViewModel {
   final CategoryUseCase sqlCategoryUsecase;
+  DataShared get dataShared => DataShared.instance;
   final TextEditingController txtCategoryName = TextEditingController();
 
-  final ValueNotifier<List<CategoryModel>> listCategory = ValueNotifier([]);
-  final ValueNotifier<List<CategoryModel>> listCategoryFilterBar =
-      ValueNotifier([]);
-  final ValueNotifier<CategoryModel?> categorySelected = ValueNotifier(
+  final ValueNotifier<CategoryModel> categorySelected = ValueNotifier(
     CategoryModel(id: "-1", name: "All"),
   );
+
+  bool isAccountEmpty = true;
 
   HomeViewModel({required this.sqlCategoryUsecase});
 
   void init() async {
-    await getCategories();
+    dataShared.getCategories();
+    dataShared.getAccounts();
+    isAccountEmpty = dataShared.accountList.value.isEmpty;
   }
 
-  void handleFilterByCategory(CategoryModel? category) {
+  void handleFilterByCategory(CategoryModel category) {
     categorySelected.value = category;
-    if (categorySelected.value?.id == "-1") {
-      listCategory.value = [...listCategoryFilterBar.value];
+    if (categorySelected.value.id == "-1") {
+      dataShared.categoryList.value = dataShared.categoryListForFilterBar.value
+          .where((element) => element.id != "-1")
+          .toList();
     } else {
-      listCategory.value = [
-        ...listCategoryFilterBar.value
-            .where((element) => element.id == category?.id)
-      ];
+      dataShared.categoryList.value = dataShared.categoryListForFilterBar.value
+          .where((element) => element.id == categorySelected.value.id)
+          .toList();
+      isAccountEmpty = dataShared.categoryList.value.first.accounts!.isEmpty;
     }
     setState(ViewState.busy);
-  }
-
-  Future<void> getCategories() async {
-    setState(ViewState.busy);
-    print("getCategories");
-    Result<List<CategoryModel>, Exception> getCategoriesWithAccounts =
-        await sqlCategoryUsecase.getCategoriesWithAccounts();
-
-    if (getCategoriesWithAccounts.isSuccess) {
-      final categories = getCategoriesWithAccounts.data ?? [];
-      listCategory.value = [...categories];
-      listCategoryFilterBar.value = [...categories];
-      categorySelected.value = CategoryModel(id: "-1", name: "All");
-    } else {
-      logError(getCategoriesWithAccounts.error);
-    }
-    setState(ViewState.idle);
   }
 
   void handleCreateCategory({
@@ -63,8 +49,9 @@ class HomeViewModel extends BaseViewModel {
         await sqlCategoryUsecase.saveCategory(categoryModel);
 
     if (result.isSuccess) {
-      await getCategories();
+      dataShared.getCategories();
       txtCategoryName.clear();
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } else {
       logError(result.error);

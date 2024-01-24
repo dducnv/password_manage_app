@@ -5,8 +5,14 @@ import 'package:password_manage_app/ui/route/route.dart';
 class AccountItemWidget extends StatelessWidget {
   final AccountModel accountModel;
   final bool isLastItem;
+  final Function() onTapSubButton;
+  final Function()? onCallBackPop;
   const AccountItemWidget(
-      {Key? key, required this.accountModel, required this.isLastItem})
+      {Key? key,
+      this.onCallBackPop,
+      required this.accountModel,
+      required this.isLastItem,
+      required this.onTapSubButton})
       : super(key: key);
 
   @override
@@ -16,7 +22,11 @@ class AccountItemWidget extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(context, RoutePaths.detailsAccount,
-              arguments: {"id": accountModel.id});
+              arguments: {"id": accountModel.id}).then((value) {
+            if (value != null) {
+              onCallBackPop?.call();
+            }
+          });
         },
         child: Container(
           padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
@@ -70,7 +80,10 @@ class AccountItemWidget extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.more_vert))
+                          onPressed: () {
+                            onTapSubButton.call();
+                          },
+                          icon: const Icon(Icons.more_vert))
                     ],
                   ),
                 ),

@@ -1,5 +1,4 @@
 import 'package:password_manage_app/core/core.dart';
-import 'package:password_manage_app/core/utils/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteRepository<T> {
@@ -41,22 +40,22 @@ class SqliteRepository<T> {
     return Result(data: models.map((e) => jsonToModelHandle(e)).toList());
   }
 
-  Future<Result<bool, Exception>> save(
-      T model, JsonToModelHandle<T> jsonToModelHandle) async {
-    if (model is SqliteTable) {
-      Result<List<T>, Exception> rst =
-          await get(model.tableName, (json) => jsonToModelHandle(json));
-      if (rst.isSuccess && (rst.data?.length ?? 0) > 0) {
-        return update(model);
-      } else {
-        return insert(model);
-      }
-    } else {
-      return Result(
-          error:
-              SqliteException(message: "${T.runtimeType} is not SqliteTable"));
-    }
-  }
+  // Future<Result<bool, Exception>> save(
+  //     T model, JsonToModelHandle<T> jsonToModelHandle) async {
+  //   if (model is SqliteTable) {
+  //     Result<List<T>, Exception> rst =
+  //         await get(model.tableName, (json) => jsonToModelHandle(json));
+  //     if (rst.isSuccess && (rst.data?.length ?? 0) > 0) {
+  //       return update(model);
+  //     } else {
+  //       return insert(model);
+  //     }
+  //   } else {
+  //     return Result(
+  //         error:
+  //             SqliteException(message: "${T.runtimeType} is not SqliteTable"));
+  //   }
+  // }
 
   Future<Result<bool, Exception>> insert(T model) async {
     if (model is SqliteTable) {
@@ -69,13 +68,17 @@ class SqliteRepository<T> {
     }
   }
 
-  Future<Result<bool, Exception>> update(T model) async {
+  Future<Result<bool, Exception>> update(
+    T model, {
+    required String id,
+    required String where,
+  }) async {
     if (model is SqliteTable) {
       int row = await db.update(
         model.tableName,
         model.toMap(),
-        where: 'uid = ?',
-        whereArgs: [model.uid],
+        where: '$where = ?',
+        whereArgs: [id],
       );
       return Result(data: row > 0);
     } else {
@@ -85,12 +88,16 @@ class SqliteRepository<T> {
     }
   }
 
-  Future<Result<bool, Exception>> delete(T model) async {
+  Future<Result<bool, Exception>> delete(
+    T model, {
+    required String id,
+    required String where,
+  }) async {
     if (model is SqliteTable) {
       int row = await db.delete(
         model.tableName,
-        where: 'uid = ?',
-        whereArgs: [model.uid],
+        where: '$where = ?',
+        whereArgs: [id],
       );
       return Result(data: row > 0);
     } else {

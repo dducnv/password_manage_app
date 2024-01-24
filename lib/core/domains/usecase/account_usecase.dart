@@ -7,4 +7,5 @@ abstract class AccountUseCase {
   );
   Future<Result<bool, Exception>> saveAccount(AccountModel account);
   Future<Result<bool, Exception>> deleteAccount(AccountModel account);
+  Future<Result<bool, Exception>> updateAccount(AccountModel account);
 }

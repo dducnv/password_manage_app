@@ -6,3 +6,5 @@ export 'item_custom/item_coppy_value.dart';
 export 'item_custom/item_private_value.dart';
 export 'button/custom_button_widget.dart';
 export 'card_item/card_item.dart';
+export 'pin_code/pin_code_widget.dart';
+export 'drawer/app_drawer.dart';

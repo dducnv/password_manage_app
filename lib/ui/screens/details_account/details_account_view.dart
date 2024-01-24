@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/ui/base/base.dart';
+import 'package:password_manage_app/ui/route/route.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
@@ -18,15 +19,26 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
       builder: (context, viewModel, _) {
         return Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop({"filter": "reload"});
+              },
+            ),
             title: Text('${viewModel.account.title}',
                 overflow: TextOverflow.ellipsis),
             actions: [
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.mode_edit_outline,
-                    color: Colors.white,
-                  ))
+                  onPressed: () async {
+                    dynamic statusUpdate = await Navigator.pushNamed(
+                        context, RoutePaths.updateAccount,
+                        arguments: {"id": widget.id});
+
+                    if (statusUpdate["updated"] == true) {
+                      viewModel.getDetailAccount(widget.id);
+                    }
+                  },
+                  icon: const Icon(Icons.mode_edit_outline))
             ],
           ),
           body: SingleChildScrollView(
@@ -89,6 +101,7 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                             ValueListenableBuilder(
                               valueListenable: viewModel.isEditNote,
                               builder: (_, value, child) {
+                                print(value);
                                 return Column(
                                   children: [
                                     Row(
@@ -112,15 +125,14 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                                             text: "Edit",
                                             miniumSize: const Size(50, 15),
                                             onPressed: () {
-                                              viewModel.isEditNote.value =
-                                                  !viewModel.isEditNote.value;
+                                              viewModel.handleUpdateNote();
                                             },
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 3),
                                               child: Text(
-                                                  !value ? "Edit" : "Done",
+                                                  value ? "Done" : "Edit",
                                                   style: const TextStyle(
                                                       fontSize: 11,
                                                       fontWeight:
@@ -177,7 +189,7 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                             children: [
                               ...viewModel.account.customFields?.map(
                                     (e) => ItemCoppyValue(
-                                      title: e.keys.first,
+                                      title: e["hintText"] ?? e.keys.first,
                                       value: e.values.firstOrNull ?? "",
                                       isPrivateValue: e["typeField"] != null
                                           ? e["typeField"]

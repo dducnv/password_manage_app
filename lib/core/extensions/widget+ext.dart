@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:password_manage_app/core/utils/dialog_content.dart';
+import 'package:password_manage_app/core/core.dart';
 
 extension WidgetExt on Widget {
   void showCustomDialog(BuildContext context, DialogContent dialogContent) {
@@ -31,5 +31,74 @@ extension WidgetExt on Widget {
     if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
       FocusManager.instance.primaryFocus?.unfocus();
     }
+  }
+
+  Future<bool> onSavePinCode({required String pinCode}) async {
+    try {
+      String codeEncrypted = EncryptData.instance.encryptFernet(
+        key: Env.pinCodeKeyEncrypt,
+        value: pinCode,
+      );
+
+      await SecureStorage.instance
+          .save(SecureStorageKeys.pinCode.name, codeEncrypted);
+      return true;
+    } catch (e) {
+      customLogger(msg: e.toString(), typeLogger: TypeLogger.error);
+    }
+    return false;
+  }
+
+  Future<bool> verifyPinCode({
+    required String pinCodeEntered,
+  }) async {
+    try {
+      if (pinCodeEntered.isEmpty) {
+        return false;
+      }
+      String? pinCodeEncrypted =
+          await SecureStorage.instance.read(SecureStorageKeys.pinCode.name);
+      if (pinCodeEncrypted == null) {
+        return false;
+      }
+      String pinCode = EncryptData.instance.decryptFernet(
+        key: Env.pinCodeKeyEncrypt,
+        value: pinCodeEncrypted,
+      );
+
+      if (pinCode.isEmpty) {
+        return false;
+      }
+
+      return pinCode == pinCodeEntered;
+    } catch (e) {
+      customLogger(msg: e.toString(), typeLogger: TypeLogger.error);
+    }
+
+    return false;
+  }
+
+  Future<bool> checkLocalAuth() async {
+    String? enableLocalAuth = await SecureStorage.instance
+        .read(SecureStorageKeys.isEnableLocalAuth.name);
+
+    if (enableLocalAuth == "false") {
+      return false;
+    }
+
+    bool canCheckBiometrics = await LocalAuthConfig.instance.canCheckBiometrics;
+    if (!canCheckBiometrics) {
+      return false;
+    }
+
+    bool isAvailableBiometrics = LocalAuthConfig.instance.isAvailableBiometrics;
+
+    if (!isAvailableBiometrics) {
+      return false;
+    }
+
+    bool authenticated = await LocalAuthConfig.instance.authenticate();
+
+    return authenticated;
   }
 }

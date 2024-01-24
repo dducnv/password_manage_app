@@ -22,9 +22,9 @@ extension SettingComponents on SettingViewState {
                         .mode
                         .name);
               },
-              icon: value == ThemeMode.dark
+              icon: value == ThemeMode.light
                   ? const Icon(Icons.light_mode)
-                  : value == ThemeMode.light
+                  : value == ThemeMode.dark
                       ? const Icon(Icons.dark_mode)
                       : const Icon(Icons.settings_system_daydream));
         });

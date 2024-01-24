@@ -65,4 +65,49 @@ extension HomeComponent on HomeViewState {
       isScrollControlled: true,
     );
   }
+
+  Future<void> bottomSheetOptionAccountItem({
+    required BuildContext context,
+    required HomeViewModel viewModel,
+  }) async {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text("Chỉnh sửa"),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text("Chỉnh sửa"),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text("Chỉnh sửa"),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text("Chỉnh sửa"),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text("Chỉnh sửa"),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
