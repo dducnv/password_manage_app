@@ -43,7 +43,7 @@ void main() async {
     ),
     androidOptions: const PrivacyAndroidOptions(
       enableSecure: true,
-      autoLockAfterSeconds: 5,
+      autoLockAfterSeconds: 60 * 3,
     ),
     backgroundColor: Colors.white.withOpacity(0),
     blurEffect: PrivacyBlurEffect.extraLight,

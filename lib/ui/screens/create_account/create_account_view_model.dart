@@ -66,19 +66,43 @@ class CreateAccountViewModel extends BaseViewModel {
       return;
     }
 
+    String titleEncrypted = EncryptData.instance.encryptFernet(
+      key: Env.infoEncryptKey,
+      value: txtTitle.text,
+    );
+
+    String usernameEncrypted = EncryptData.instance.encryptFernet(
+      key: Env.infoEncryptKey,
+      value: txtUsername.text,
+    );
+
+    String passwordEncrypted = EncryptData.instance.encryptFernet(
+      key: Env.passwordEncryptKey,
+      value: txtPassword.text,
+    );
+
+    String noteEncrypted = txtNote.text != ""? EncryptData.instance.encryptFernet(
+      key: Env.infoEncryptKey,
+      value: txtNote.text,
+    ) : "";
+
     AccountModel account = AccountModel(
-      title: txtTitle.text,
-      email: txtUsername.text,
-      password: txtPassword.text,
-      note: txtNote.text,
+      title: titleEncrypted,
+      email: usernameEncrypted,
+      password: passwordEncrypted,
+      note: noteEncrypted,
       category: categorySelected.value,
-      customFields: dynamicTextFieldNotifier.value
-          .map((e) => {
-                e.customField.key: e.controller.text,
-                "typeField": e.customField.typeField.type,
-                "hintText": e.customField.hintText
-              })
-          .toList(),
+      customFields: dynamicTextFieldNotifier.value.map((e) {
+        String customFieldValueEncrypted = EncryptData.instance.encryptFernet(
+          key: Env.infoEncryptKey,
+          value: e.controller.text,
+        );
+        return {
+          e.customField.key: customFieldValueEncrypted,
+          "typeField": e.customField.typeField.type,
+          "hintText": e.customField.hintText
+        };
+      }).toList(),
     );
 
     Result<bool, Exception> result =

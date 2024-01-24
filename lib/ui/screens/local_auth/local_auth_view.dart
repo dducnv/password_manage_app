@@ -6,6 +6,7 @@ import 'package:password_manage_app/ui/base/base.dart';
 import 'package:password_manage_app/ui/route/route.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
+import 'package:privacy_screen/privacy_screen.dart';
 
 class LocalAuthView extends StatelessWidget {
   const LocalAuthView({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class LocalAuthView extends StatelessWidget {
                       bool isAuth = await checkLocalAuth();
 
                       if (isAuth) {
+                        PrivacyScreen.instance.unlock();
                         await Navigator.of(context)
                             .pushReplacementNamed(RoutePaths.homeRoute);
                       }
@@ -41,6 +43,7 @@ class LocalAuthView extends StatelessWidget {
             onEnter: (pin, state) async {
               bool isCorrect = await verifyPinCode(pinCodeEntered: pin);
               if (isCorrect) {
+                PrivacyScreen.instance.unlock();
                 await Navigator.of(context)
                     .pushReplacementNamed(RoutePaths.homeRoute);
               } else {

@@ -18,7 +18,7 @@ class CategoryModel extends SqliteTable implements Comparable {
         name: json['cate_name'] != null ? tryCast(json['cate_name']) : null,
         accounts: json['acc_uid'] != null ? [] : null,
         account: json['acc_uid'] != null
-            ? AccountModel.fromJson(json, isFromSql: true)
+            ? AccountModel.fromJsonAndDecode(json, isFromSql: true)
             : null,
       );
     }

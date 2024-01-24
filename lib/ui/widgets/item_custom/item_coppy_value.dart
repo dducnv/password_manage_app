@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:password_manage_app/core/core.dart';
 
 class ItemCoppyValue extends StatefulWidget {
   final bool isLastItem;
@@ -47,7 +48,7 @@ class _ItemCoppyValueState extends State<ItemCoppyValue> {
                       fontWeight: FontWeight.w500)),
               Text(
                 widget.isPrivateValue
-                    ? (_isShowValue ? widget.value : "************")
+                    ? (_isShowValue ? decodePassword(widget.value) : "************")
                     : widget.value,
                 style: const TextStyle(fontSize: 14),
               ),

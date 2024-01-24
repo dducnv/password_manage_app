@@ -1,4 +1,5 @@
-import 'package:password_manage_app/core/utils/logger.dart';
+import 'package:password_manage_app/core/core.dart';
+
 
 export 'app_language_provider.dart';
 export 'constants.dart';
@@ -31,4 +32,21 @@ T? tryCast<T>(dynamic x) {
 
     return null;
   }
+}
+
+
+String decodeInfo(String info) {
+    String pinCode = EncryptData.instance.decryptFernet(
+        key: Env.infoEncryptKey,
+        value: info,
+      );
+  return pinCode;
+}
+
+String decodePassword(String password) {
+    String pinCode = EncryptData.instance.decryptFernet(
+        key: Env.passwordEncryptKey,
+        value: password,
+      );
+  return pinCode;
 }

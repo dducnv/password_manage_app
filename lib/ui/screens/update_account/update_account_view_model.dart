@@ -59,7 +59,8 @@ class UpdateAccountViewModel extends BaseViewModel {
     txtNote.text = account.note ?? "";
     txtTitle.text = account.title ?? "";
     txtUsername.text = account.email ?? "";
-    txtPassword.text = account.password ?? "";
+    txtPassword.text =
+        account.password != null ? decodePassword(account.password!) : "";
     categorySelected.value =
         account.category ?? dataShared.categoryList.value[0];
 
@@ -94,10 +95,32 @@ class UpdateAccountViewModel extends BaseViewModel {
     if (categorySelected.value.name == "Select category") {
       return;
     }
-    account.title = txtTitle.text;
-    account.email = txtUsername.text;
-    account.password = txtPassword.text;
-    account.note = txtNote.text;
+
+ String titleEncrypted = EncryptData.instance.encryptFernet(
+      key: Env.infoEncryptKey,
+      value: txtTitle.text,
+    );
+
+    String usernameEncrypted = EncryptData.instance.encryptFernet(
+      key: Env.infoEncryptKey,
+      value: txtUsername.text,
+    );
+
+    String passwordEncrypted = EncryptData.instance.encryptFernet(
+      key: Env.passwordEncryptKey,
+      value: txtPassword.text,
+    );
+
+    String noteEncrypted = txtNote.text != ""? EncryptData.instance.encryptFernet(
+      key: Env.infoEncryptKey,
+      value: txtNote.text,
+    ) : "";
+
+
+    account.title =titleEncrypted ;
+    account.email = usernameEncrypted;
+    account.password = passwordEncrypted;
+    account.note = noteEncrypted;
     account.category = categorySelected.value;
     account.customFields = dynamicTextFieldNotifier.value
         .map((e) => {

@@ -24,6 +24,32 @@ class AccountModel extends SqliteTable implements Comparable {
     this.customFields,
   });
 
+  factory AccountModel.fromJsonAndDecode(
+    Map<String, dynamic> json, {
+    bool isFromSql = false,
+  }) {
+    return AccountModel(
+      id: tryCast(json['acc_uid']),
+      title: decodeInfo(tryCast(json['acc_title'])),
+      email: decodeInfo(tryCast(json['acc_email'])),
+      icon: tryCast(json['acc_icon']),
+      password: tryCast(json['acc_password']),
+      note: json['acc_note'] != "" ? decodeInfo(tryCast(json['acc_note'])) : "",
+      customFields: json['acc_custom_fields'] != null
+          ? (jsonDecode(tryCast(json['acc_custom_fields'])) as List)
+              .map((e) => e as Map<String, dynamic>)
+              .toList()
+          : [],
+      category: json['cate_id'] != null && json['cate_name'] != null
+          ? CategoryModel(
+              id: tryCast(json['cate_id']),
+              name: tryCast(json['cate_name']),
+              accounts: [],
+            )
+          : null,
+    );
+  }
+
   factory AccountModel.fromJson(
     Map<String, dynamic> json, {
     bool isFromSql = false,

@@ -22,7 +22,7 @@ class SqlAccountUsecase implements AccountUseCase {
         ''',
         (json) {
           print(json.toString());
-          return AccountModel.fromJson(json, isFromSql: true);
+          return AccountModel.fromJsonAndDecode(json, isFromSql: true);
         },
       );
 
