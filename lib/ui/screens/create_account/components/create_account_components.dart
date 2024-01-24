@@ -153,7 +153,7 @@ extension CretaeAccountComponent on CreateAccountViewState {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                          "Chọn danh mục (${viewModel.dataShared.categoryList.value.length})"),
+                          "Chọn danh mục (${viewModel.dataShared.categoryListForFilterBar.value.length})"),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 10),

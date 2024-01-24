@@ -54,6 +54,7 @@ class CreateAccountViewState extends State<CreateAccountView> {
                       textInputAction: TextInputAction.next,
                       textAlign: TextAlign.start,
                       hintText: "Tên ứng dụng",
+                      autoFocus:true,
                       maxLines: 1,
                       isObscure: false,
                     ),

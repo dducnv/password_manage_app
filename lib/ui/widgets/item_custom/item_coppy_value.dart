@@ -72,7 +72,7 @@ class _ItemCoppyValueState extends State<ItemCoppyValue> {
                 ),
               IconButton(
                   onPressed: () {
-                    Clipboard.setData(ClipboardData(text: widget.value));
+                    Clipboard.setData(ClipboardData(text: decodePassword(widget.value)));
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Copied to clipboard')));
                   },
