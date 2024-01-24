@@ -12,4 +12,7 @@ abstract class Env {
 
   @EnviedField(varName: 'PASSWORD_ENCRYPT_KEY', obfuscate: true)
   static final String passwordEncryptKey = _Env.passwordEncryptKey;
+
+  @EnviedField(varName: 'FILE_ENCRYPT_KEY', obfuscate: true)
+  static final String fileEncryptKey = _Env.fileEncryptKey;
 }

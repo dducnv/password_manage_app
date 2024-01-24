@@ -4,7 +4,7 @@ import 'package:password_manage_app/core/utils/utils.dart';
 class AppLanguageProvider extends ChangeNotifier {
   Locale _appLocale = const Locale("en");
 
-  Locale get appLocal => _appLocale ?? const Locale("en");
+  Locale get appLocal => _appLocale;
 
   fetchLocale() async {
     var currentLang =
