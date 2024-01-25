@@ -7,11 +7,13 @@ class AccountItemWidget extends StatelessWidget {
   final bool isLastItem;
   final Function() onTapSubButton;
   final Function()? onCallBackPop;
+  final Function()? onLongPress;
   const AccountItemWidget(
       {Key? key,
       this.onCallBackPop,
       required this.accountModel,
       required this.isLastItem,
+      this.onLongPress,
       required this.onTapSubButton})
       : super(key: key);
 
@@ -20,6 +22,9 @@ class AccountItemWidget extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
+        onLongPress: (){
+          onLongPress?.call();
+        },
         onTap: () {
           Navigator.pushNamed(context, RoutePaths.detailsAccount,
               arguments: {"id": accountModel.id}).then((value) {

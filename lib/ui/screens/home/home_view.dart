@@ -162,6 +162,12 @@ class HomeViewState extends State<HomeView> {
                                                                       .categorySelected
                                                                       .value);
                                                         },
+                                                        onLongPress: () {
+                                                          bottomSheetOptionAccountItem(
+                                                              viewModel:
+                                                                  viewModel,
+                                                              context: context);
+                                                        },
                                                         onTapSubButton: () {
                                                           bottomSheetOptionAccountItem(
                                                               viewModel:
