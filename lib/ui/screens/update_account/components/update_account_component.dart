@@ -149,7 +149,7 @@ extension UpdateAccountViewComponent on UpdateAccountViewState {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                      "Chọn danh mục (${viewModel.dataShared.categoryList.value.length})"),
+                      "Chọn danh mục (${viewModel.dataShared.categoryListForFilterBar.value.length})"),
                 ),
                 const SizedBox(
                   height: 10,

@@ -207,7 +207,7 @@ class HomeViewState extends State<HomeView> {
                             viewModel.categorySelected,
                             builder: (context, listCate, cateSelected, child) {
                               listCate = [
-                                CategoryModel(id: "-1", name: "All"),
+                                CategoryModel(id: "-1", name: Strings.all),
                                 ...listCate
                               ];
                               return ListView.separated(

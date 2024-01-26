@@ -30,8 +30,8 @@ class LocalAuthView extends StatelessWidget {
 
                       if (isAuth) {
                         PrivacyScreen.instance.unlock();
-                        await Navigator.of(context)
-                            .pushReplacementNamed(RoutePaths.homeRoute);
+                        await Navigator.of(context).pushNamedAndRemoveUntil(
+                            RoutePaths.homeRoute, (route) => false);
                       }
                     },
                     icon: const Icon(
@@ -44,8 +44,8 @@ class LocalAuthView extends StatelessWidget {
               bool isCorrect = await verifyPinCode(pinCodeEntered: pin);
               if (isCorrect) {
                 PrivacyScreen.instance.unlock();
-                await Navigator.of(context)
-                    .pushReplacementNamed(RoutePaths.homeRoute);
+                await Navigator.of(context).pushNamedAndRemoveUntil(
+                    RoutePaths.homeRoute, (route) => false);
               } else {
                 state.codeIncorected();
               }

@@ -8,7 +8,7 @@ class HomeViewModel extends BaseViewModel {
   final TextEditingController txtCategoryName = TextEditingController();
 
   final ValueNotifier<CategoryModel> categorySelected = ValueNotifier(
-    CategoryModel(id: "-1", name: "All"),
+    CategoryModel(id: "-1", name: Strings.all),
   );
 
   bool isAccountEmpty = true;

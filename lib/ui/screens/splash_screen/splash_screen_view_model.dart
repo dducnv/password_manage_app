@@ -17,9 +17,9 @@ class SplashScreenViewModel extends BaseViewModel {
       }
     });
     Future.delayed(const Duration(milliseconds: 1000), () async {
-      await Navigator.pushReplacementNamed(
-          GlobalKeys.appRootNavigatorKey.currentContext!,
-          RoutePaths.localAuthView);
+      await Navigator.of(
+        GlobalKeys.appRootNavigatorKey.currentContext!,
+      ).pushNamedAndRemoveUntil(RoutePaths.localAuthView, (route) => false);
     });
   }
 

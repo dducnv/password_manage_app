@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 
 class EncryptData {
@@ -33,13 +33,27 @@ class EncryptData {
     return decrypted;
   }
 
-  String rsaEncrypt({required String value, required String key}) {
-    return "";
+  List<int> encryptFernetBytes({required List<int> data, required String key}) {
+    var keyFromUtf8 = Key.fromUtf8(key);
+    final b64key =
+        Key.fromUtf8(base64Url.encode(keyFromUtf8.bytes).substring(0, 32));
+
+    Encrypter encrypter = Encrypter(Fernet(b64key));
+    Encrypted encryptedData = encrypter.encryptBytes(data);
+
+    return encryptedData.bytes;
   }
 
-  String rsaDecrypt({required String codeBase64, required String key}) {
-    return "";
+  List<int> decryptFernetBytes(
+      {required List<int> encryptedData, required String key}) {
+    var keyFromUtf8 = Key.fromUtf8(key);
+    final b64key =
+        Key.fromUtf8(base64Url.encode(keyFromUtf8.bytes).substring(0, 32));
+
+    Encrypter encrypter = Encrypter(Fernet(b64key));
+    final uint8List = Uint8List.fromList(encryptedData);
+    List<int> decryptedData = encrypter.decryptBytes(Encrypted(uint8List));
+
+    return decryptedData;
   }
 }
-
-class HMAC {}

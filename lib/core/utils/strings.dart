@@ -29,6 +29,7 @@ class Strings {
   static String get oneTimePasswords => "one_time_passwords".tr();
   static String get textField => "text_field".tr();
   static String get textSecureField => "text_secure_field".tr();
+  static String get all => "all".tr();
 
   //account
   static String get createAccountPageTitle => "create_account".tr();

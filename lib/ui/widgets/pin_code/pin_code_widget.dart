@@ -228,6 +228,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
           );
         } else if (index == 11) {
           return _buildButton(
+            backgroundColor: Colors.transparent,
             text: 'OK',
             onPressed: () {
               widget.onEnter(pin, this);

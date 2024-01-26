@@ -43,5 +43,6 @@
      "copy_username": "Sao chép tên đăng nhập",
      "copy_website": "Sao chép trang web",
      "text_field": "Văn bản",
-     "text_secure_field": "Văn bản bảo mật"
+     "text_secure_field": "Văn bản bảo mật",
+     "all": "Tất cả"
 }
