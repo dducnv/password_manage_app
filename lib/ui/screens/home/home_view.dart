@@ -43,8 +43,9 @@ class HomeViewState extends State<HomeView> {
 
                   if (isPop['filter'] == "reload") {
                     Future.delayed(const Duration(milliseconds: 50), () {
+        
                       viewModel.handleFilterByCategory(
-                          viewModel.categorySelected.value);
+                          isPop['category']);
                     });
                   }
                 },

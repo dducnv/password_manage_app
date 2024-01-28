@@ -81,10 +81,12 @@ class CreateAccountViewModel extends BaseViewModel {
       value: txtPassword.text,
     );
 
-    String noteEncrypted = txtNote.text != ""? EncryptData.instance.encryptFernet(
-      key: Env.infoEncryptKey,
-      value: txtNote.text,
-    ) : "";
+    String noteEncrypted = txtNote.text != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.infoEncryptKey,
+            value: txtNote.text,
+          )
+        : "";
 
     AccountModel account = AccountModel(
       title: titleEncrypted,
@@ -115,7 +117,10 @@ class CreateAccountViewModel extends BaseViewModel {
 
       customLogger(msg: "Create account success", typeLogger: TypeLogger.info);
       // ignore: use_build_context_synchronously
-      Navigator.of(context).pop({"filter": "reload"});
+      Navigator.of(context).pop({
+        "filter": "reload",
+        "category": categorySelected.value,
+      });
     } else {
       customLogger(
           msg: "Create account error ${result.error}",

@@ -24,9 +24,8 @@ class HomeViewModel extends BaseViewModel {
   void handleFilterByCategory(CategoryModel category) {
     categorySelected.value = category;
     if (categorySelected.value.id == "-1") {
-      dataShared.categoryList.value = dataShared.categoryListForFilterBar.value
-          .where((element) => element.id != "-1")
-          .toList();
+      isAccountEmpty = dataShared.accountList.value.isEmpty;
+      dataShared.categoryList.value = dataShared.categoryListForFilterBar.value;
     } else {
       dataShared.categoryList.value = dataShared.categoryListForFilterBar.value
           .where((element) => element.id == categorySelected.value.id)
