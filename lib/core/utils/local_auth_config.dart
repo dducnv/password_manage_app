@@ -8,16 +8,20 @@ class LocalAuthConfig {
 
   final LocalAuthentication auth = LocalAuthentication();
   bool? _canCheckBiometrics;
+  bool? _isOpenUseBiometric;
   List<BiometricType>? _availableBiometrics;
 
   bool get isAvailableBiometrics =>
       _canCheckBiometrics! && _availableBiometrics!.isNotEmpty;
+
+  bool get isOpenUseBiometric => _isOpenUseBiometric!;
 
   List<BiometricType> get availableBiometrics => _availableBiometrics!;
 
   Future<void> init() async {
     await canCheckBiometrics;
     await getAvailableBiometrics();
+    await openUseBiometric();
   }
 
   Future<bool> get canCheckBiometrics async {
@@ -32,6 +36,16 @@ class LocalAuthConfig {
     }
     _canCheckBiometrics = canCheckBiometrics;
     return _canCheckBiometrics!;
+  }
+
+  Future<void> openUseBiometric() async {
+    String? enableLocalAuth = await SecureStorage.instance
+        .read(SecureStorageKeys.isEnableLocalAuth.name);
+    if (enableLocalAuth == "false" || enableLocalAuth == null) {
+      _isOpenUseBiometric = false;
+    } else {
+      _isOpenUseBiometric = true;
+    }
   }
 
   Future<List<BiometricType>> getAvailableBiometrics() async {

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-enum SecureStorageKeys { themMode, appLang, pinCode, isEnableLocalAuth }
+enum SecureStorageKeys { themMode, appLang, pinCode, isEnableLocalAuth, fistOpenApp }
 
 class SecureStorage {
   static final instance = SecureStorage._internal();

@@ -42,6 +42,9 @@ class ServiceLocator {
       () => HomeViewModel(
         sqlCategoryUsecase: locator.get<CategoryUseCase>(
             instanceName: DependencyInstance.sqlCategoryUsecase.name),
+        sqlAccountUsecase: locator.get<AccountUseCase>(
+            instanceName: DependencyInstance.sqlAccountUsecase.name),
+
       ),
     );
     locator.registerFactory<SettingViewModel>(() => SettingViewModel());
@@ -72,5 +75,7 @@ class ServiceLocator {
     locator.registerFactory<SplashScreenViewModel>(() => SplashScreenViewModel(
         sqlCategoryUsecase: locator.get<CategoryUseCase>(
             instanceName: DependencyInstance.sqlCategoryUsecase.name)));
+    locator.registerFactory<RegisterViewModel>(() => RegisterViewModel());
+    locator.registerFactory<OnboardingViewModel>(() => OnboardingViewModel());
   }
 }

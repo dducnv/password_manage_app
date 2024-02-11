@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:password_manage_app/ui/route/route.dart';
+import 'package:password_manage_app/ui/screens/onboarding/onboarding_screen_view.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 
 class AppGenerateRoute {
@@ -14,6 +15,9 @@ class AppGenerateRoute {
         break;
       case RoutePaths.splashRote:
         widget = const SplashScreenView();
+        break;
+      case RoutePaths.onboardingRoute:
+        widget = const OnboardingScreenView();
         break;
       case RoutePaths.settingRoute:
         widget = const SettingView();
@@ -41,6 +45,9 @@ class AppGenerateRoute {
         break;
       case RoutePaths.localAuthView:
         widget = const LocalAuthView();
+        break;
+      case RoutePaths.register:
+        widget = const RegisterView();
         break;
     }
     return Platform.isIOS

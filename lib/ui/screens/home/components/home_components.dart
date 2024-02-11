@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:password_manage_app/core/core.dart';
+import 'package:password_manage_app/ui/route/route.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
@@ -71,6 +73,7 @@ extension HomeComponent on HomeViewState {
   Future<void> bottomSheetOptionAccountItem({
     required BuildContext context,
     required HomeViewModel viewModel,
+    required AccountModel accountModel,
   }) async {
     return showModalBottomSheet(
       context: context,
@@ -81,29 +84,40 @@ extension HomeComponent on HomeViewState {
             child: Column(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: const Text("Chỉnh sửa"),
-                  onTap: () {},
+                  leading: const Icon(Icons.info),
+                  title: const Text("Chi tiết"),
+                  onTap: () {
+                    Navigator.pushNamed(context, RoutePaths.detailsAccount,
+                        arguments: {"id": accountModel.id}).then((value) {});
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.edit),
                   title: const Text("Chỉnh sửa"),
-                  onTap: () {},
+                  onTap: () async {
+                    Navigator.pop(context);
+                    dynamic statusUpdate = await Navigator.pushNamed(
+                        context, RoutePaths.updateAccount,
+                        arguments: {"id": accountModel.id});
+                    if (statusUpdate != null && statusUpdate == true) {
+                      viewModel.handleFilterByCategory(
+                          viewModel.categorySelected.value);
+
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            Navigator.pop(context);
+                          });
+                    }
+                  },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: const Text("Chỉnh sửa"),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: const Text("Chỉnh sửa"),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: const Text("Chỉnh sửa"),
-                  onTap: () {},
+                  leading: const Icon(Icons.delete),
+                  title: const Text("Xóa tài khoản"),
+                  onTap: () {
+                    viewModel.handleDeleteAccount(
+                      context: context,
+                      accountModel: accountModel,
+                    );
+                  },
                 ),
               ],
             ),

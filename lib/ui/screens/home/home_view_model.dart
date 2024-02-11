@@ -4,6 +4,7 @@ import 'package:password_manage_app/ui/base/base.dart';
 
 class HomeViewModel extends BaseViewModel {
   final CategoryUseCase sqlCategoryUsecase;
+  final AccountUseCase sqlAccountUsecase;
   DataShared get dataShared => DataShared.instance;
   final TextEditingController txtCategoryName = TextEditingController();
 
@@ -13,7 +14,8 @@ class HomeViewModel extends BaseViewModel {
 
   bool isAccountEmpty = true;
 
-  HomeViewModel({required this.sqlCategoryUsecase});
+  HomeViewModel(
+      {required this.sqlCategoryUsecase, required this.sqlAccountUsecase});
 
   void init() async {
     dataShared.getCategories();
@@ -33,6 +35,27 @@ class HomeViewModel extends BaseViewModel {
       isAccountEmpty = dataShared.categoryList.value.first.accounts!.isEmpty;
     }
     setState(ViewState.busy);
+  }
+
+  void handleDeleteAccount({
+    required BuildContext context,
+    required AccountModel accountModel,
+  }) async {
+    Result<bool, Exception> result =
+        await sqlAccountUsecase.deleteAccount(accountModel);
+    if (result.isSuccess) {
+      dataShared.getAccounts();
+      dataShared.getCategories();
+
+      Future.delayed(const Duration(milliseconds: 100), () {
+        handleFilterByCategory(categorySelected.value);
+      });
+
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    } else {
+      logError(result.error);
+    }
   }
 
   void handleCreateCategory({

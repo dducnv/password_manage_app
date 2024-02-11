@@ -22,7 +22,7 @@ class LocalAuthView extends StatelessWidget {
                 MediaQuery.of(context).platformBrightness == Brightness.light
                     ? Colors.black
                     : Colors.white,
-            centerBottomWidget: LocalAuthConfig.instance.isAvailableBiometrics
+            centerBottomWidget: LocalAuthConfig.instance.isAvailableBiometrics  && LocalAuthConfig.instance.isOpenUseBiometric
                 ? IconButton(
                     iconSize: 50,
                     onPressed: () async {

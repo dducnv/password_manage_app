@@ -42,10 +42,8 @@ class HomeViewState extends State<HomeView> {
                                   viewModel.categorySelected.value)));
 
                   if (isPop['filter'] == "reload") {
-                    Future.delayed(const Duration(milliseconds: 50), () {
-        
-                      viewModel.handleFilterByCategory(
-                          isPop['category']);
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      viewModel.handleFilterByCategory(isPop['category']);
                     });
                   }
                 },
@@ -167,12 +165,16 @@ class HomeViewState extends State<HomeView> {
                                                           bottomSheetOptionAccountItem(
                                                               viewModel:
                                                                   viewModel,
+                                                              accountModel:
+                                                                  item,
                                                               context: context);
                                                         },
                                                         onTapSubButton: () {
                                                           bottomSheetOptionAccountItem(
                                                               viewModel:
                                                                   viewModel,
+                                                              accountModel:
+                                                                  item,
                                                               context: context);
                                                         },
                                                         accountModel: item,
