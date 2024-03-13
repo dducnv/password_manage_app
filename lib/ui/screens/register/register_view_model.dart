@@ -30,6 +30,9 @@ class RegisterViewModel extends BaseViewModel {
       await SecureStorage.instance
           .save(SecureStorageKeys.pinCode.name, codeEncrypted);
 
+     await SecureStorage.instance
+          .save(SecureStorageKeys.fistOpenApp.name, "false");
+
       Navigator.of(GlobalKeys.appRootNavigatorKey.currentContext!)
           .pushNamedAndRemoveUntil(RoutePaths.homeRoute, (route) => false);
     } catch (e) {

@@ -83,7 +83,7 @@ class SetThemeModeWidget extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         SizedBox(
-                            child: value == ThemeMode.dark
+                            child: value != ThemeMode.dark
                                 ? const Icon(Icons.light_mode)
                                 : value == ThemeMode.light
                                     ? const Icon(Icons.dark_mode)

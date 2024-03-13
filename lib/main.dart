@@ -48,19 +48,29 @@ void main() async {
     backgroundColor: Colors.white.withOpacity(0),
     blurEffect: PrivacyBlurEffect.extraLight,
   );
+  var currentLang =
+      await SecureStorage.instance.read(SecureStorageKeys.appLang.name) ?? "en";
 
   runApp(EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('vi')],
     path: 'assets/locales',
-    fallbackLocale: const Locale('en'),
+    startLocale: Locale(currentLang),
+    fallbackLocale: Locale(currentLang),
     useOnlyLangCode: true,
     useFallbackTranslations: true,
     child: const MyApp(),
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
 
   // This widget is the root of your application.
   @override
