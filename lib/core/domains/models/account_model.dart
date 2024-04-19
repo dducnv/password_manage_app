@@ -30,8 +30,8 @@ class AccountModel extends SqliteTable implements Comparable {
   }) {
     return AccountModel(
       id: tryCast(json['acc_uid']),
-      title: decodeInfo(tryCast(json['acc_title'])),
-      email: decodeInfo(tryCast(json['acc_email'])),
+      title:json['acc_title'] !=""? decodeInfo(tryCast(json['acc_title'])) : "",
+      email:json['acc_email'] != ""? decodeInfo(tryCast(json['acc_email'])) :"",
       icon: tryCast(json['acc_icon']),
       password: tryCast(json['acc_password']),
       note: json['acc_note'] != "" ? decodeInfo(tryCast(json['acc_note'])) : "",

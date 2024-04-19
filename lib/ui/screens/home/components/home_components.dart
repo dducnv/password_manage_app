@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/core.dart';
+import 'package:password_manage_app/core/utils/utils.dart';
 import 'package:password_manage_app/ui/route/route.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
@@ -21,11 +22,11 @@ extension HomeComponent on HomeViewState {
                 CustomTextField(
                     autoFocus: true,
                     requiredTextField: true,
-                    titleTextField: "Tên danh mục",
+                    titleTextField:Strings.categoryName,
                     controller: viewModel.txtCategoryName,
                     textInputAction: TextInputAction.go,
                     textAlign: TextAlign.start,
-                    hintText: "Nhập tên danh mục",
+                    hintText: Strings.enterCategoryName,
                     maxLines: 1,
                     isObscure: false,
                     onFieldSubmitted: (value) {
@@ -42,17 +43,17 @@ extension HomeComponent on HomeViewState {
                     );
                   },
                   text: "",
-                  child: const Row(
+                  child:  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.add,
                         color: Colors.white,
                       ),
                       Text(
-                        "Thêm danh mục",
+                        Strings.addCategory,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -85,7 +86,7 @@ extension HomeComponent on HomeViewState {
               children: [
                 ListTile(
                   leading: const Icon(Icons.info),
-                  title: const Text("Chi tiết"),
+                  title: Text(Strings.details),
                   onTap: () {
                     Navigator.pushNamed(context, RoutePaths.detailsAccount,
                         arguments: {"id": accountModel.id}).then((value) {});
@@ -93,7 +94,7 @@ extension HomeComponent on HomeViewState {
                 ),
                 ListTile(
                   leading: const Icon(Icons.edit),
-                  title: const Text("Chỉnh sửa"),
+                  title:  Text(Strings.edit),
                   onTap: () async {
                     Navigator.pop(context);
                     dynamic statusUpdate = await Navigator.pushNamed(
@@ -111,7 +112,7 @@ extension HomeComponent on HomeViewState {
                 ),
                 ListTile(
                   leading: const Icon(Icons.delete),
-                  title: const Text("Xóa tài khoản"),
+                  title:  Text(Strings.delete),
                   onTap: () {
                     viewModel.handleDeleteAccount(
                       context: context,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:password_manage_app/core/core.dart';
 import 'package:password_manage_app/ui/base/base.dart';
 import 'package:password_manage_app/ui/route/route.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class DetailsAccountView extends StatefulWidget {
   final String id;
@@ -15,6 +17,8 @@ class DetailsAccountView extends StatefulWidget {
 class _DetailsAccountViewState extends State<DetailsAccountView> {
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+
     return BaseView<DetailsAccountViewModel>(
       builder: (context, viewModel, _) {
         return Scaffold(
@@ -48,7 +52,7 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
-                  Text("Thông tin đăng nhập",
+                  Text(Strings.loginInfomation,
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -58,12 +62,12 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                     child: Column(
                       children: [
                         ItemCoppyValue(
-                          title: 'Email/Username',
+                          title: 'Email/${Strings.username}',
                           value: viewModel.account.email ?? "",
                         ),
                         const SizedBox(height: 10),
                         ItemCoppyValue(
-                          title: 'Password',
+                          title: Strings.password,
                           value: viewModel.account.password ?? "",
                           isLastItem: true,
                           isPrivateValue: true,
@@ -72,7 +76,7 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text("Category",
+                  Text(Strings.category,
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -101,19 +105,21 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                             ValueListenableBuilder(
                               valueListenable: viewModel.isEditNote,
                               builder: (_, value, child) {
-                                print(value);
                                 return Column(
                                   children: [
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text("Note",
+                                        Text(Strings.notes,
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600,
                                                 color: Colors.grey[800])),
                                         CustomButtonWidget(
+                                          border:value? Border.all(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ) :null,
                                             borderRadiusGeometry:
                                                 BorderRadius.circular(50),
                                             backgroundColor: Theme.of(context)
@@ -122,7 +128,7 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                                             margin: const EdgeInsets.only(
                                                 right: 10),
                                             padding: const EdgeInsets.all(0),
-                                            text: "Edit",
+                                            text: Strings.edit,
                                             miniumSize: const Size(50, 15),
                                             onPressed: () {
                                               viewModel.handleUpdateNote();
@@ -130,14 +136,19 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
+                                                    horizontal: 10,
                                                       vertical: 3),
                                               child: Text(
-                                                  value ? "Done" : "Edit",
-                                                  style: const TextStyle(
+                                                  value
+                                                      ? Strings.save
+                                                      : Strings.edit,
+                                                  style:  TextStyle(
                                                       fontSize: 11,
                                                       fontWeight:
                                                           FontWeight.w500,
-                                                      color: Colors.white)),
+                                                      color:Provider.of<ThemeProvider>(context, listen: true).mode   == ThemeMode.light? Colors.grey[700] : Colors.grey[400]
+                                                          
+                                                          )),
                                             )) // 1")),
                                       ],
                                     ),
@@ -178,7 +189,7 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Thông tin tuỳ chỉnh",
+                        Text(Strings.customInfo,
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -190,7 +201,13 @@ class _DetailsAccountViewState extends State<DetailsAccountView> {
                               ...viewModel.account.customFields?.map(
                                     (e) => ItemCoppyValue(
                                       title: e["hintText"] ?? e.keys.first,
-                                      value: e.values.firstOrNull ?? "",
+                                      value: e["typeField"] != null
+                                          ? e["typeField"]
+                                                  .toLowerCase()
+                                                  .contains("password")
+                                              ? e.values.firstOrNull
+                                              : decodeInfo(e.values.firstOrNull)
+                                          : "",
                                       isPrivateValue: e["typeField"] != null
                                           ? e["typeField"]
                                               .toLowerCase()

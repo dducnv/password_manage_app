@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/domains/constants/locale.dart';
+import 'package:password_manage_app/core/utils/utils.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
 class ChangeLangWidget extends StatelessWidget {
@@ -18,7 +19,7 @@ class ChangeLangWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Language",
+                Strings.language,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 4),

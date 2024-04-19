@@ -69,6 +69,7 @@ class AccountItemWidget extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.5,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               accountModel.title ?? "",
@@ -78,9 +79,12 @@ class AccountItemWidget extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                               maxLines: 1,
                             ),
-                            Text(accountModel.email ?? "",
+                        
+                           Visibility(
+                              visible: accountModel.email != null,
+                            child:  Text(accountModel.email ?? "",
                                 style: const TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
+                                    color: Colors.grey, fontSize: 12)),)
                           ],
                         ),
                       ),

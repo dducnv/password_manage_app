@@ -27,7 +27,7 @@ class SetThemeModeWidget extends StatelessWidget {
                           return AlertDialog(
                             clipBehavior: Clip.antiAlias,
                             contentPadding: const EdgeInsets.all(0),
-                            title: const Text("Theme mode"),
+                            title:  Text(Strings.themeMode),
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -35,7 +35,7 @@ class SetThemeModeWidget extends StatelessWidget {
                                   leading: value == ThemeMode.system
                                       ? const Icon(Icons.check)
                                       : const SizedBox.shrink(),
-                                  title: const Text("System"),
+                                  title:  Text(Strings.system),
                                   onTap: () {
                                     Provider.of<ThemeProvider>(context,
                                             listen: false)
@@ -47,7 +47,7 @@ class SetThemeModeWidget extends StatelessWidget {
                                   leading: value == ThemeMode.light
                                       ? const Icon(Icons.check)
                                       : const SizedBox.shrink(),
-                                  title: const Text("Light"),
+                                  title:  Text(Strings.light),
                                   onTap: () {
                                     Provider.of<ThemeProvider>(context,
                                             listen: false)
@@ -59,7 +59,7 @@ class SetThemeModeWidget extends StatelessWidget {
                                   leading: value == ThemeMode.dark
                                       ? const Icon(Icons.check)
                                       : const SizedBox.shrink(),
-                                  title: const Text("Dark"),
+                                  title:  Text(Strings.dark),
                                   onTap: () {
                                     Provider.of<ThemeProvider>(context,
                                             listen: false)
@@ -79,7 +79,7 @@ class SetThemeModeWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Theme mode",
+                          Strings.themeMode,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         SizedBox(

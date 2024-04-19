@@ -49,7 +49,9 @@ class _ItemCoppyValueState extends State<ItemCoppyValue> {
               Text(
                 widget.isPrivateValue
                     ? (_isShowValue
-                        ? decodePassword(widget.value)
+                        ? widget.value == ""
+                            ? ""
+                            : decodePassword(widget.value)
                         : "************")
                     : widget.value,
                 style: const TextStyle(fontSize: 14),
@@ -72,6 +74,7 @@ class _ItemCoppyValueState extends State<ItemCoppyValue> {
                           Icons.visibility,
                         ),
                 ),
+             widget.value != "" ?
               IconButton(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(
@@ -81,7 +84,8 @@ class _ItemCoppyValueState extends State<ItemCoppyValue> {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Copied to clipboard')));
                   },
-                  icon: const Icon(Icons.copy, size: 20)),
+                  icon: const Icon(Icons.copy, size: 20)) :
+                  const SizedBox.shrink()
             ],
           )
         ],

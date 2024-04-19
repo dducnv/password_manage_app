@@ -114,21 +114,21 @@ class HomeViewState extends State<HomeView> {
                                               width: 60,
                                               height: 60,
                                             ),
-                                            const Row(
+                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Text("Ấn nút"),
-                                                SizedBox(
+                                                Text(Strings.clickButton),
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
-                                                CircleAvatar(
+                                                const CircleAvatar(
                                                   child: Icon(Icons.add),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
-                                                Text("để thêm tài khoản"),
+                                                Text(Strings.toCreateAccount),
                                               ],
                                             )
                                           ],

@@ -4,6 +4,7 @@ import 'package:password_manage_app/core/core.dart';
 import 'package:password_manage_app/core/domains/constants/locale.dart';
 import 'package:password_manage_app/ui/base/base.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
+import 'package:password_manage_app/ui/screens/setting/widgets/export_backup_file_widget.dart';
 import 'package:password_manage_app/ui/screens/setting/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,7 @@ class SettingView extends StatefulWidget {
 class SettingViewState extends State<SettingView> {
   @override
   Widget build(BuildContext context) {
-    print("build");
+
     return BaseView<SettingViewModel>(
         builder: (context, viewModel, _) {
           return Scaffold(
@@ -46,7 +47,21 @@ class SettingViewState extends State<SettingView> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      const UseBiometricLogin()
+                      const UseBiometricLogin(),
+                      // const SizedBox(height: 16),
+                      SettingItemWidget(
+                        onTap: () {
+                          viewModel.importDbAsCrypt();
+                        },
+                        title: Strings.importBackup,
+                        icon: Icons.upload_file,
+                      ),
+                      const SizedBox(height: 16),
+                      ExportBackupFileWidget(
+                        onTap: () {
+                          viewModel.exportDbAsCrypt(context);                        
+                        },
+                      ),
                     ]),
                   ),
                 );

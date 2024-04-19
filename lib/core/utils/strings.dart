@@ -25,16 +25,29 @@ class Strings {
   static String get fieldName => "field_name".tr();
   static String get fieldType => "field_type".tr();
   static String get fieldValue => "field_value".tr();
+  static String get addCustomField => "add_custom_field".tr();
+  static String get addField => "add_field".tr();
+  static String get selectCategory => "select_category".tr();
   static String get authenticationKey => "authentication_key".tr();
   static String get oneTimePasswords => "one_time_passwords".tr();
   static String get textField => "text_field".tr();
-  static String get textSecureField => "text_secure_field".tr();
+  static String get textSecureField => "text_secure".tr();
   static String get all => "all".tr();
+  static String get notes => "notes".tr();
+  static String get category => "category".tr();
+  static String get categoryName => "category_name".tr();
+  static String get enterCategoryName => "enter_category_name".tr();
+  static String get addCategory => "add_category".tr();
+  static String get clickButton => "click_button".tr();
+  static String get toCreateAccount => "to_create_account".tr();
+  static String get loginInfomation => "login_infomation".tr();
 
   //account
   static String get createAccountPageTitle => "create_account".tr();
   static String get editAccountPageTitle => "edit_account".tr();
   static String get accountDetailPageTitle => "account_detail".tr();
+  static String get customInfo => "custom_info".tr();
+
 
   //alert dialog notification
   static String get deleteAccountWarning => "delete_account_warning".tr();
@@ -42,4 +55,14 @@ class Strings {
   static String get deleteAccountFailed => "delete_account_failed".tr();
   static String get settingsSaved => "settings_saved".tr();
   static String get settingsNotSaved => "settings_not_saved".tr();
+
+  //settings
+  static String get themeMode => "theme_mode".tr();
+  static String get dark => "dark".tr();
+  static String get light => "light".tr();
+  static String get system => "system".tr();
+  static String get language => "language".tr();
+  static String get useBiometricLogin => "use_biometrics".tr();
+  static String get exportBackup => "export_backup".tr();
+  static String get importBackup => "import_backup".tr();
 }

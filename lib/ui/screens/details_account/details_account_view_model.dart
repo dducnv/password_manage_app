@@ -40,7 +40,29 @@ class DetailsAccountViewModel extends BaseViewModel {
       return;
     }
 
-    account.note = txtNote.text;
+     
+    String titleEncrypted = account.title != null ? EncryptData.instance.encryptFernet(
+      key: Env.infoEncryptKey,
+      value: account.title!
+    ) : "";
+
+    String usernameEncrypted = account.email != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.infoEncryptKey,
+            value:  account.email!,
+          )
+        : "";
+
+  
+
+    String noteEncrypted = txtNote.text != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.infoEncryptKey,
+            value: txtNote.text,
+          )
+        : "";
+
+    account.note = noteEncrypted;
 
     customLogger(msg: "${account.id}", typeLogger: TypeLogger.info);
 

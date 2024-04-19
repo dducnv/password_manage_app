@@ -43,6 +43,27 @@
      "copy_username": "Sao chép tên đăng nhập",
      "copy_website": "Sao chép trang web",
      "text_field": "Văn bản",
-     "text_secure_field": "Văn bản bảo mật",
-     "all": "Tất cả"
+     "text_secure": "Văn bản bảo mật",
+     "all": "Tất cả",
+     
+     "theme_mode": "Chuyển đổi chủ đề",
+     "light": "Sáng",
+     "dark": "Tối",
+     "system": "Hệ thống",
+     "language": "Ngôn ngữ",
+     "use_biometrics": "Mở Khóa sinh trắc học",
+     "add_custom_field": "Thêm trường tùy chỉnh",
+     "select_category": "Chọn danh mục",
+     "category": "Danh mục",
+     "category_name": "Tên danh mục",
+     "enter_category_name": "Nhập tên danh mục",
+     "add_category": "Thêm danh mục",
+     "click_button": "Nhấn nút",
+     "to_create_account" : "để tạo tài khoản",
+     "login_infomation": "Thông tin đăng nhập",
+     "done": "Hoàn tất",
+     "custom_info": "Thông tin tùy chỉnh",
+     "import_backup": "Nhập dữ liệu",
+     "export_backup": "Sao lưu dữ liệu"
+
 }

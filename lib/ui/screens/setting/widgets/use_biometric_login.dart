@@ -55,44 +55,47 @@ class _UseBiometricLoginState extends State<UseBiometricLogin> {
   Widget build(BuildContext context) {
     return Visibility(
       visible: isCanUseBiometric,
-      child: CardCustomWidget(
-          padding: const EdgeInsets.all(0),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {},
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Use biometric login",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 4),
-                    //switch
-                    Switch(
-                      value: isOpenUseBiometric,
-                      onChanged: (value) {
-                        if (value) {
-                          openBiometric();
-                        } else {
-                          setState(() {
-                            isOpenUseBiometric = false;
-                          });
-                          SecureStorage.instance.save(
-                              SecureStorageKeys.isEnableLocalAuth.name, "false");
-                        }
-                      },
-                      activeColor: Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: CardCustomWidget(
+            padding: const EdgeInsets.all(0),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {},
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        Strings.useBiometricLogin,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      //switch
+                      Switch(
+                        value: isOpenUseBiometric,
+                        onChanged: (value) {
+                          if (value) {
+                            openBiometric();
+                          } else {
+                            setState(() {
+                              isOpenUseBiometric = false;
+                            });
+                            SecureStorage.instance.save(
+                                SecureStorageKeys.isEnableLocalAuth.name, "false");
+                          }
+                        },
+                        activeColor: Theme.of(context).colorScheme.primary,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 }

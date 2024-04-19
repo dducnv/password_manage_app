@@ -28,18 +28,18 @@ extension UpdateAccountViewComponent on UpdateAccountViewState {
             children: [
               CustomTextField(
                 requiredTextField: true,
-                titleTextField: "Tên trường",
+                titleTextField: Strings.fieldName,
                 controller: controller,
                 textInputAction: TextInputAction.next,
                 textAlign: TextAlign.start,
-                hintText: "Tên trường",
+                hintText: Strings.fieldName,
                 maxLines: 1,
                 isObscure: false,
               ),
               const SizedBox(height: 10),
               RichText(
                 text: TextSpan(
-                    text: "Loại trường: ",
+                    text: "${Strings.fieldType}: ",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -108,17 +108,17 @@ extension UpdateAccountViewComponent on UpdateAccountViewState {
                   Navigator.pop(context);
                 },
                 text: "",
-                child: const Row(
+                child:  Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.add,
                       color: Colors.white,
                     ),
                     Text(
-                      "Thêm trường",
+                      Strings.addField,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -149,7 +149,7 @@ extension UpdateAccountViewComponent on UpdateAccountViewState {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                      "Chọn danh mục (${viewModel.dataShared.categoryListForFilterBar.value.length})"),
+                      "${Strings.selectCategory} (${viewModel.dataShared.categoryListForFilterBar.value.length})"),
                 ),
                 const SizedBox(
                   height: 10,

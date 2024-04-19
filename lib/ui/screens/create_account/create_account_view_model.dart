@@ -20,17 +20,17 @@ class CreateAccountViewModel extends BaseViewModel {
       ValueNotifier<List<DynamicTextField>>([]);
 
   List<TypeTextField> typeTextFields = [
-    TypeTextField(title: 'Text', type: 'text'),
-    TypeTextField(title: 'Password', type: 'password'),
+    TypeTextField(title: Strings.textField, type: 'text'),
+    TypeTextField(title:Strings.textSecureField, type: 'password'),
   ];
 
   ValueNotifier<TypeTextField> typeTextFieldSelected =
       ValueNotifier<TypeTextField>(
-    TypeTextField(title: 'Text', type: 'text'),
+    TypeTextField(title: Strings.textField, type: 'text'),
   );
 
   ValueNotifier<CategoryModel> categorySelected =
-      ValueNotifier<CategoryModel>(CategoryModel(name: "Select category"));
+      ValueNotifier<CategoryModel>(CategoryModel(name: Strings.selectCategory));
 
   DataShared get dataShared => DataShared.instance;
 
@@ -54,32 +54,25 @@ class CreateAccountViewModel extends BaseViewModel {
       return;
     }
 
-    if (txtUsername.text.isEmpty) {
-      return;
-    }
-
-    if (txtPassword.text.isEmpty) {
-      return;
-    }
-
-    if (categorySelected.value.name == "Select category") {
-      return;
-    }
 
     String titleEncrypted = EncryptData.instance.encryptFernet(
       key: Env.infoEncryptKey,
       value: txtTitle.text,
     );
 
-    String usernameEncrypted = EncryptData.instance.encryptFernet(
-      key: Env.infoEncryptKey,
-      value: txtUsername.text,
-    );
+    String usernameEncrypted = txtUsername.text != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.infoEncryptKey,
+            value: txtUsername.text,
+          )
+        : "";
 
-    String passwordEncrypted = EncryptData.instance.encryptFernet(
-      key: Env.passwordEncryptKey,
-      value: txtPassword.text,
-    );
+    String passwordEncrypted = txtPassword.text != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.passwordEncryptKey,
+            value: txtPassword.text,
+          )
+        : "";
 
     String noteEncrypted = txtNote.text != ""
         ? EncryptData.instance.encryptFernet(
@@ -96,7 +89,9 @@ class CreateAccountViewModel extends BaseViewModel {
       category: categorySelected.value,
       customFields: dynamicTextFieldNotifier.value.map((e) {
         String customFieldValueEncrypted = EncryptData.instance.encryptFernet(
-          key: Env.infoEncryptKey,
+          key: e.customField.typeField.type == "password"
+              ? Env.passwordEncryptKey
+              : Env.infoEncryptKey,
           value: e.controller.text,
         );
         return {

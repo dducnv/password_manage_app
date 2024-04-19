@@ -60,9 +60,8 @@ class UpdateAccountViewModel extends BaseViewModel {
     txtTitle.text = account.title ?? "";
     txtUsername.text = account.email ?? "";
     txtPassword.text =
-        account.password != null ? decodePassword(account.password!) : "";
-    categorySelected.value =
-        account.category ?? dataShared.categoryList.value[0];
+        account.password != "" ? decodePassword(account.password!) : "";
+    categorySelected.value =account.category ?? categorySelected.value;
 
     for (Map<String, dynamic> customField in account.customFields ?? []) {
       handleAddField(
@@ -84,40 +83,37 @@ class UpdateAccountViewModel extends BaseViewModel {
       return;
     }
 
-    if (txtUsername.text.isEmpty) {
-      return;
-    }
-
-    if (txtPassword.text.isEmpty) {
-      return;
-    }
-
     if (categorySelected.value.name == "Select category") {
       return;
     }
 
- String titleEncrypted = EncryptData.instance.encryptFernet(
+    String titleEncrypted = EncryptData.instance.encryptFernet(
       key: Env.infoEncryptKey,
       value: txtTitle.text,
     );
 
-    String usernameEncrypted = EncryptData.instance.encryptFernet(
-      key: Env.infoEncryptKey,
-      value: txtUsername.text,
-    );
+    String usernameEncrypted = txtUsername.text != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.infoEncryptKey,
+            value: txtUsername.text,
+          )
+        : "";
 
-    String passwordEncrypted = EncryptData.instance.encryptFernet(
-      key: Env.passwordEncryptKey,
-      value: txtPassword.text,
-    );
+    String passwordEncrypted = txtPassword.text != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.infoEncryptKey,
+            value: txtPassword.text,
+          )
+        : "";
 
-    String noteEncrypted = txtNote.text != ""? EncryptData.instance.encryptFernet(
-      key: Env.infoEncryptKey,
-      value: txtNote.text,
-    ) : "";
+    String noteEncrypted = txtNote.text != ""
+        ? EncryptData.instance.encryptFernet(
+            key: Env.infoEncryptKey,
+            value: txtNote.text,
+          )
+        : "";
 
-
-    account.title =titleEncrypted ;
+    account.title = titleEncrypted;
     account.email = usernameEncrypted;
     account.password = passwordEncrypted;
     account.note = noteEncrypted;

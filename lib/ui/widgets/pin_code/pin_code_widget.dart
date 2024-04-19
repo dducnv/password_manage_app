@@ -161,12 +161,12 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                       !maxLengthAnimation || !incorectPinAnimation || !animate
                           ? size
                           : size + 10,
-                  duration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: incorectPinAnimation
-                        ? Theme.of(context).colorScheme.error
+                        ? Colors.red
                         : Theme.of(context).colorScheme.onSecondary,
                   ),
                 ),
