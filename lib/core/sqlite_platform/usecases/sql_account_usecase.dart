@@ -21,7 +21,6 @@ class SqlAccountUsecase implements AccountUseCase {
         WHERE ${AccountModel().tableName}.acc_uid = '$uid'
         ''',
         (json) {
-          print(json.toString());
           return AccountModel.fromJsonAndDecode(json, isFromSql: true);
         },
       );

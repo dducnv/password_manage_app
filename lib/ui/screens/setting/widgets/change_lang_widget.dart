@@ -6,8 +6,8 @@ import 'package:password_manage_app/ui/widgets/widgets.dart';
 class ChangeLangWidget extends StatelessWidget {
   final Function(int id) onTap;
   final Locale locale;
-  const ChangeLangWidget({Key? key, required this.onTap, required this.locale})
-      : super(key: key);
+  const ChangeLangWidget(
+      {super.key, required this.onTap, required this.locale});
 
   @override
   Widget build(BuildContext context) {

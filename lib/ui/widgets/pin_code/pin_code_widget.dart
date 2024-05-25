@@ -6,7 +6,7 @@ import 'package:password_manage_app/ui/widgets/widgets.dart';
 
 class PinCodeWidget extends StatefulWidget {
   const PinCodeWidget({
-    Key? key,
+    super.key,
     required this.onEnter,
     this.minPinLength = 4,
     this.maxPinLength = 25,
@@ -18,7 +18,7 @@ class PinCodeWidget extends StatefulWidget {
     this.borderSide = const BorderSide(width: 1, color: Colors.grey),
     this.buttonColor = Colors.black12,
     this.onPressColorAnimation = Colors.yellow,
-  }) : super(key: key);
+  });
 
   final void Function(String pin, PinCodeState state) onEnter;
   final void Function(String pin) onChangedPin;
@@ -47,6 +47,11 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   bool maxLengthAnimation = false;
 
   int currentPinLength() => pin.length;
+
+  void reset() {
+    pin = "";
+    setState(() {});
+  }
 
   void codeIncorected() {
     setState(() {
@@ -101,7 +106,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   Widget build(BuildContext context) => Scaffold(
         key: _key,
         body: Scaffold(
-          backgroundColor: Colors.black.withOpacity(0.15),
+          backgroundColor: Theme.of(context).colorScheme.background,
           body: body(context),
         ),
         resizeToAvoidBottomInset: false,
@@ -115,23 +120,27 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
       child: Container(
         key: _gridViewKey,
         padding: const EdgeInsets.only(left: 40, right: 40, bottom: 30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            _buildPinIndicator(),
-            const Spacer(flex: 2),
-            Flexible(
-              flex: 26,
-              child: Container(
-                child: _aspectRatio > 0 ? _buildNumPad() : null,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              _buildPinIndicator(),
+              const Spacer(flex: 2),
+              Flexible(
+                flex: 26,
+                child: SizedBox(
+                  width: 350,
+                  child: _aspectRatio > 0 ? _buildNumPad() : null,
+                ),
               ),
-            ),
-            const Spacer(flex: 1),
-            widget.centerBottomWidget != null
-                ? Center(child: widget.centerBottomWidget!)
-                : const SizedBox(),
-          ],
+              const Spacer(flex: 1),
+              widget.centerBottomWidget != null
+                  ? Center(child: widget.centerBottomWidget!)
+                  : const SizedBox(),
+            ],
+          ),
         ),
       ),
     );
@@ -230,6 +239,8 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
           return _buildButton(
             backgroundColor: Colors.transparent,
             text: 'OK',
+            textStyle:
+                TextStyle(color: Theme.of(context).colorScheme.onSecondary),
             onPressed: () {
               widget.onEnter(pin, this);
             },
@@ -250,6 +261,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   Widget _buildButton({
     required String text,
     required VoidCallback onPressed,
+    TextStyle? textStyle,
     Color? backgroundColor,
     Widget? child,
   }) {
@@ -263,6 +275,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
       kPadding: 0,
       miniumSize: const Size(50, 50),
       text: text,
+      style: textStyle,
       backgroundColor: backgroundColor ?? widget.buttonColor,
       onPressed: onPressed,
       child: child,
@@ -341,10 +354,10 @@ class _MeasureSizeRenderObject extends RenderProxyBox {
 
 class MeasureSize extends SingleChildRenderObjectWidget {
   const MeasureSize({
-    Key? key,
+    super.key,
     required this.onChange,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required Widget super.child,
+  });
 
   final OnWidgetSizeChange onChange;
 

@@ -44,7 +44,6 @@ class ServiceLocator {
             instanceName: DependencyInstance.sqlCategoryUsecase.name),
         sqlAccountUsecase: locator.get<AccountUseCase>(
             instanceName: DependencyInstance.sqlAccountUsecase.name),
-
       ),
     );
     locator.registerFactory<SettingViewModel>(() => SettingViewModel());

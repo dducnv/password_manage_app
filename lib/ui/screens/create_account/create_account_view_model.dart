@@ -21,7 +21,7 @@ class CreateAccountViewModel extends BaseViewModel {
 
   List<TypeTextField> typeTextFields = [
     TypeTextField(title: Strings.textField, type: 'text'),
-    TypeTextField(title:Strings.textSecureField, type: 'password'),
+    TypeTextField(title: Strings.textSecureField, type: 'password'),
   ];
 
   ValueNotifier<TypeTextField> typeTextFieldSelected =
@@ -53,7 +53,6 @@ class CreateAccountViewModel extends BaseViewModel {
     if (txtTitle.text.isEmpty) {
       return;
     }
-
 
     String titleEncrypted = EncryptData.instance.encryptFernet(
       key: Env.infoEncryptKey,

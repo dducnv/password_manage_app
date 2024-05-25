@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manage_app/core/utils/utils.dart';
 
@@ -6,9 +7,11 @@ class AppLanguageProvider extends ChangeNotifier {
 
   Locale get appLocal => _appLocale;
 
-  fetchLocale() async {
+  fetchLocale(BuildContext context) async {
     var currentLang =
-        await SecureStorage.instance.read(SecureStorageKeys.appLang.name) ?? "";
+        await SecureStorage.instance.read(SecureStorageKeys.appLang.name) ??
+            EasyLocalization.of(context)?.currentLocale?.countryCode ??
+            "en";
     if (currentLang == "vi") {
       _appLocale = const Locale("vi");
       return Null;

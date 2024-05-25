@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+
 import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:privacy_screen/privacy_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,8 +21,7 @@ void main() async {
     AccountModel().createTableCommand,
     CategoryModel().createTableCommand,
   ]);
-  AppLanguageProvider appLanguage = AppLanguageProvider();
-  await appLanguage.fetchLocale();
+
   await LocalAuthConfig.instance.init();
   var getThemeStorage = await SecureStorage.instance
           .read(SecureStorageKeys.themMode.toString()) ??
@@ -54,7 +54,6 @@ void main() async {
   runApp(EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('vi')],
     path: 'assets/locales',
-    startLocale: Locale(currentLang),
     fallbackLocale: Locale(currentLang),
     useOnlyLangCode: true,
     useFallbackTranslations: true,
@@ -70,8 +69,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

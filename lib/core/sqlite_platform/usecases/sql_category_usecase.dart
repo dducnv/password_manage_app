@@ -58,7 +58,7 @@ class SqlCategoryUsecase implements CategoryUseCase {
         }
 
         final account = category.account ?? AccountModel();
-        print("Account: ${account.toJson()}");
+
         if (account.id != null &&
             account.id!.isNotEmpty &&
             account.category?.id == categoryId) {

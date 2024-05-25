@@ -4,7 +4,7 @@ import 'package:password_manage_app/ui/widgets/widgets.dart';
 
 class ConfirmScreenWidget extends StatefulWidget {
   final RegisterViewModel viewModel;
- const  ConfirmScreenWidget({Key? key, required this.viewModel}) : super(key: key);
+  const ConfirmScreenWidget({super.key, required this.viewModel});
 
   @override
   State<ConfirmScreenWidget> createState() => _ConfirmScreenWidgetState();
@@ -21,13 +21,14 @@ class _ConfirmScreenWidgetState extends State<ConfirmScreenWidget> {
               ? Colors.black
               : Colors.white,
       onEnter: (pin, state) async {
-        if(pin.isEmpty){
+        if (pin.isEmpty) {
           return;
         }
-        if(widget.viewModel.pinCode == pin){
+        if (widget.viewModel.pinCode == pin) {
           widget.viewModel.savePinCode();
-        }else{
-          state.codeIncorected();
+        } else {
+          state.reset();
+          widget.viewModel.backToCreatePage();
         }
       },
       onChangedPin: (pin) {},

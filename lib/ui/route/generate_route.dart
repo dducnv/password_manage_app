@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:password_manage_app/ui/route/route.dart';
-import 'package:password_manage_app/ui/screens/onboarding/onboarding_screen_view.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
+import 'package:password_manage_app/ui/screens/welcome/welcome_screen.dart';
 
 class AppGenerateRoute {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -12,6 +12,9 @@ class AppGenerateRoute {
     switch (settings.name) {
       case RoutePaths.homeRoute:
         widget = const HomeView();
+        break;
+      case RoutePaths.welcomeScreen:
+        widget = const WelcomeScreen();
         break;
       case RoutePaths.splashRote:
         widget = const SplashScreenView();

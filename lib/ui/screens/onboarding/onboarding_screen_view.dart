@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OnboardingScreenView extends StatefulWidget {
-  const OnboardingScreenView({Key? key}) : super(key: key);
+  const OnboardingScreenView({super.key});
 
   @override
   State<OnboardingScreenView> createState() => _OnboardingScreenViewState();
@@ -12,13 +12,13 @@ class _OnboardingScreenViewState extends State<OnboardingScreenView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(context, '/register', (route) => false);
-          },
-          child: const Text('Go to Register'),
-        )
-      ),
+          child: ElevatedButton(
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/register', (route) => false);
+        },
+        child: const Text('Go to Register'),
+      )),
     );
   }
 }

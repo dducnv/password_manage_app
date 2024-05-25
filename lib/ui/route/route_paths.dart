@@ -1,6 +1,7 @@
 class RoutePaths {
   static const String homeRoute = '/';
   static const String splashRote = '/splash';
+  static const String welcomeScreen = '/welcome';
   static const String onboardingRoute = '/onboarding';
   static const String settingRoute = '/setting';
   static const String createAccount = '/create_account';

@@ -4,7 +4,7 @@ import 'package:password_manage_app/ui/widgets/widgets.dart';
 
 class FistScreenWidget extends StatefulWidget {
   final RegisterViewModel viewModel;
-  const FistScreenWidget({Key? key, required this.viewModel}) : super(key: key);
+  const FistScreenWidget({super.key, required this.viewModel});
 
   @override
   State<FistScreenWidget> createState() => _FistScreenWidgetState();
@@ -21,11 +21,10 @@ class _FistScreenWidgetState extends State<FistScreenWidget> {
               ? Colors.black
               : Colors.white,
       onEnter: (pin, state) async {
-        if(pin.isEmpty){
+        if (pin.isEmpty) {
           return;
         }
         widget.viewModel.setPin(pin);
-        
       },
       onChangedPin: (pin) {},
     );

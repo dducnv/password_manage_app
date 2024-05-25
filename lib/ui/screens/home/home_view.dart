@@ -8,7 +8,7 @@ import 'package:password_manage_app/ui/screens/screen.dart';
 import 'package:password_manage_app/ui/widgets/widgets.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   @override
   State<HomeView> createState() => HomeViewState();
@@ -114,7 +114,7 @@ class HomeViewState extends State<HomeView> {
                                               width: 60,
                                               height: 60,
                                             ),
-                                             Row(
+                                            Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [

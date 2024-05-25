@@ -3,7 +3,7 @@ import 'package:password_manage_app/ui/base/base.dart';
 import 'package:password_manage_app/ui/screens/screen.dart';
 
 class SplashScreenView extends StatefulWidget {
-  const SplashScreenView({Key? key}) : super(key: key);
+  const SplashScreenView({super.key});
 
   @override
   State<SplashScreenView> createState() => _SplashScreenViewState();
@@ -29,7 +29,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                 ))),
           ));
     }, onViewModelReady: (viewModel) {
-      viewModel.init();
+      viewModel.init(context);
     });
   }
 }

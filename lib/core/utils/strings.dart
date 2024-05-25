@@ -48,7 +48,6 @@ class Strings {
   static String get accountDetailPageTitle => "account_detail".tr();
   static String get customInfo => "custom_info".tr();
 
-
   //alert dialog notification
   static String get deleteAccountWarning => "delete_account_warning".tr();
   static String get deleteAccountSuccess => "delete_account_success".tr();
@@ -65,4 +64,10 @@ class Strings {
   static String get useBiometricLogin => "use_biometrics".tr();
   static String get exportBackup => "export_backup".tr();
   static String get importBackup => "import_backup".tr();
+
+  //onboarding
+
+  static String get helloText => "hello".tr();
+  static String get selectLang => "select_lang".tr();
+  static String get continueText => "continue".tr();
 }

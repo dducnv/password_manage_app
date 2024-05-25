@@ -8,9 +8,10 @@ class SplashScreenViewModel extends BaseViewModel {
 
   SplashScreenViewModel({required this.sqlCategoryUsecase});
 
-  void init() async {
+  void init(BuildContext context) async {
+    AppLanguageProvider appLanguage = AppLanguageProvider();
+    await appLanguage.fetchLocale(context);
     await checkFistOpenApp();
-
   }
 
   // Future<void> seedPinCode() async {
@@ -35,8 +36,7 @@ class SplashScreenViewModel extends BaseViewModel {
         Future.delayed(const Duration(milliseconds: 1000), () async {
           await Navigator.of(
             GlobalKeys.appRootNavigatorKey.currentContext!,
-          ).pushNamedAndRemoveUntil(
-              RoutePaths.onboardingRoute, (route) => false);
+          ).pushNamedAndRemoveUntil(RoutePaths.welcomeScreen, (route) => false);
         });
       } else {
         Future.delayed(const Duration(milliseconds: 1000), () async {

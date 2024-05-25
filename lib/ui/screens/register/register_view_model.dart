@@ -13,6 +13,13 @@ class RegisterViewModel extends BaseViewModel {
     confirmScreen.value = !confirmScreen.value;
   }
 
+  void backToCreatePage() {
+    pinCode = "";
+    confirmScreen.value = false;
+    pageController.previousPage(
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+  }
+
   void setPin(String pin) {
     pinCode = pin;
     confirmScreen.value = true;
@@ -30,8 +37,8 @@ class RegisterViewModel extends BaseViewModel {
       await SecureStorage.instance
           .save(SecureStorageKeys.pinCode.name, codeEncrypted);
 
-     await SecureStorage.instance
-          .save(SecureStorageKeys.fistOpenApp.name, "false");
+      // await SecureStorage.instance
+      //     .save(SecureStorageKeys.fistOpenApp.name, "false");
 
       Navigator.of(GlobalKeys.appRootNavigatorKey.currentContext!)
           .pushNamedAndRemoveUntil(RoutePaths.homeRoute, (route) => false);
